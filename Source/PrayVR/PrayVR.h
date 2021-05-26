@@ -1,6 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2014-2021 Sombusta, All Rights Reserved.
+// SomWorks :D // MIT LICENSE // Epic VR Template Convert C++ Open Source Project.
 
 #pragma once
 
 #include "CoreMinimal.h"
-
