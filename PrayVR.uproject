@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "5.0EA",
+	"EngineAssociation": "4.27",
 	"Category": "Template",
 	"Description": "// SomWorks :D // UE4 VR Template Convert C++ Open Source Project.",
 	"Modules": [
@@ -14,18 +14,10 @@
 		}
 	],
 	"Plugins": [
-		{
-			"Name": "Bridge",
-			"Enabled": true,
-			"SupportedTargetPlatforms": [
-				"Win64",
-				"Mac",
-				"Linux"
-			]
-		}
 	],
 	"TargetPlatforms": [
 		"PS4",
-		"WindowsNoEditor"
+		"WindowsNoEditor",
+		"Windows"
 	]
 }
