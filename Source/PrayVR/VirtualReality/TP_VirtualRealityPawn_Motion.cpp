@@ -93,24 +93,26 @@ void ATP_VirtualRealityPawn_Motion::BeginPlay()
 void ATP_VirtualRealityPawn_Motion::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	float MotionController_Left_Thumbstick_X = InputComponent->GetAxisValue(TEXT("MotionControllerThumbLeft_X")); // = UGameplayStatics::GetPlayerController(GetWorld(), 0)->PlayerInput->GetKeyValue(EKeys::MotionController_Left_Thumbstick_X);
-	float MotionController_Left_Thumbstick_Y = InputComponent->GetAxisValue(TEXT("MotionControllerThumbLeft_Y")); // = UGameplayStatics::GetPlayerController(GetWorld(), 0)->PlayerInput->GetKeyValue(EKeys::MotionController_Left_Thumbstick_Y);
-	float MotionController_Right_Thumbstick_X = InputComponent->GetAxisValue(TEXT("MotionControllerThumbRight_X")); // = UGameplayStatics::GetPlayerController(GetWorld(), 0)->PlayerInput->GetKeyValue(EKeys::MotionController_Right_Thumbstick_X);
-	float MotionController_Right_Thumbstick_Y = InputComponent->GetAxisValue(TEXT("MotionControllerThumbRight_Y")); // = UGameplayStatics::GetPlayerController(GetWorld(), 0)->PlayerInput->GetKeyValue(EKeys::MotionController_Right_Thumbstick_Y);
-
-	// Epic Comment :D // Left Hand Teleport Rotation
-	if (LeftController->GetIsTeleporterActive())
+	if (bBinding)
 	{
-		FRotator LeftTeleportRotation = GetRotationFromInput(MotionController_Left_Thumbstick_Y, MotionController_Left_Thumbstick_X, LeftController);
-		LeftController->SetTeleportRotation(LeftTeleportRotation);
-	}
+		float MotionController_Left_Thumbstick_X = InputComponent->GetAxisValue(TEXT("MotionControllerThumbLeft_X")); // = UGameplayStatics::GetPlayerController(GetWorld(), 0)->PlayerInput->GetKeyValue(EKeys::MotionController_Left_Thumbstick_X);
+		float MotionController_Left_Thumbstick_Y = InputComponent->GetAxisValue(TEXT("MotionControllerThumbLeft_Y")); // = UGameplayStatics::GetPlayerController(GetWorld(), 0)->PlayerInput->GetKeyValue(EKeys::MotionController_Left_Thumbstick_Y);
+		float MotionController_Right_Thumbstick_X = InputComponent->GetAxisValue(TEXT("MotionControllerThumbRight_X")); // = UGameplayStatics::GetPlayerController(GetWorld(), 0)->PlayerInput->GetKeyValue(EKeys::MotionController_Right_Thumbstick_X);
+		float MotionController_Right_Thumbstick_Y = InputComponent->GetAxisValue(TEXT("MotionControllerThumbRight_Y")); // = UGameplayStatics::GetPlayerController(GetWorld(), 0)->PlayerInput->GetKeyValue(EKeys::MotionController_Right_Thumbstick_Y);
 
-	// Epic Comment :D // Right Hand Teleport Rotation
-	if (RightController->GetIsTeleporterActive())
-	{
-		FRotator RightTeleportRotation = GetRotationFromInput(MotionController_Right_Thumbstick_Y, MotionController_Right_Thumbstick_X, RightController);
-		RightController->SetTeleportRotation(RightTeleportRotation);
+		// Epic Comment :D // Left Hand Teleport Rotation
+		if (LeftController->GetIsTeleporterActive())
+		{
+			FRotator LeftTeleportRotation = GetRotationFromInput(MotionController_Left_Thumbstick_Y, MotionController_Left_Thumbstick_X, LeftController);
+			LeftController->SetTeleportRotation(LeftTeleportRotation);
+		}
+
+		// Epic Comment :D // Right Hand Teleport Rotation
+		if (RightController->GetIsTeleporterActive())
+		{
+			FRotator RightTeleportRotation = GetRotationFromInput(MotionController_Right_Thumbstick_Y, MotionController_Right_Thumbstick_X, RightController);
+			RightController->SetTeleportRotation(RightTeleportRotation);
+		}
 	}
 }
 
@@ -142,6 +144,8 @@ void ATP_VirtualRealityPawn_Motion::SetupPlayerInputComponent(UInputComponent* P
 	PlayerInputComponent->BindAxis(TEXT("MotionControllerThumbLeft_X"));
 	PlayerInputComponent->BindAxis(TEXT("MotionControllerThumbRight_Y"));
 	PlayerInputComponent->BindAxis(TEXT("MotionControllerThumbRight_X"));
+
+	bBinding = true;
 }
 
 void ATP_VirtualRealityPawn_Motion::OnResetVR()
