@@ -1,4 +1,4 @@
-# SomTemplate_VR
+# PrayVR
 UE4 VR Template Convert Full C++ Project.
 
 - Support Unreal Engine 4 Version : 4.18, 4.19, 4.20, 4.21, 4.22, 4.23, 4.24, 4.25, 4.26 
