@@ -45,16 +45,27 @@ private:
 	void GripRight() { RightController->Grip(); }
 	void ReleaseRight() { RightController->Release(); }
 
+
+	void SetupTeleport();
 	void BeginTeleport();
 	void FinishTeleport();
 
 	void StartFade(float FromAlpha, float ToAlpha);
 
+	void ResetVR();
 
+	void Rotation(float Rotate);
+
+	void TurnAtRate(float Rate);
+
+	DECLARE_DELEGATE_OneParam(FFooDelegate, float);
 
 private:
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
+		class USceneComponent* VRRoot;
+
+	UPROPERTY(VisibleAnywhere)
 		class UCameraComponent* Camera;
 
 	UPROPERTY()
@@ -62,8 +73,6 @@ private:
 	UPROPERTY()
 		AHandController* RightController;
 
-	UPROPERTY()
-		class USceneComponent* VRRoot;
 
 
 	UPROPERTY(VisibleAnywhere)
@@ -82,6 +91,10 @@ private:
 		TArray<class USplineMeshComponent*> TeleportPathMeshPool;
 
 private: // Configuration Parameters
+
+	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
+	UPROPERTY(EditAnywhere, Category = Camera)
+		float BaseTurnRate;
 
 	UPROPERTY(EditAnywhere)
 		float TeleportProjectileRadius = 10;
@@ -112,4 +125,6 @@ private: // Configuration Parameters
 
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<AHandController> HandControllerClass;
+
+	bool bStarTeleport = false;
 };

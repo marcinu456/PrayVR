@@ -3,6 +3,7 @@
 
 #include "VRPawn.h"
 
+#include "HeadMountedDisplayFunctionLibrary.h"
 #include "Engine/World.h"
 
 #include "UObject/Object.h"
@@ -20,7 +21,7 @@
 
 AVRPawn::AVRPawn()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	VRRoot = CreateDefaultSubobject<USceneComponent>(TEXT("VRRoot"));
 	SetRootComponent(VRRoot);
@@ -42,6 +43,17 @@ AVRPawn::AVRPawn()
 void AVRPawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Epic Comment :D // Setup Player Height for various Platforms (PS4, Vive, Oculus)
+	FName DeviceName = UHeadMountedDisplayFunctionLibrary::GetHMDDeviceName();
+
+	if (DeviceName == "SteamVR" || DeviceName == "OculusHMD")
+	{
+		// Epic Comment :D // Windows (Oculus / Vive)
+		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Floor);
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Some warning message %s"), *DeviceName.ToString());
 
 	DestinationMarker->SetVisibility(false);
 
@@ -91,6 +103,8 @@ void AVRPawn::Tick(float DeltaTime)
 
 	UpdateDestinationMarker();
 	UpdateBlinkers();
+
+
 }
 
 // Called to bind functionality to input
@@ -302,7 +316,6 @@ void AVRPawn::FinishTeleport()
 	FVector Destination = DestinationMarker->GetComponentLocation();
 	Destination +=/* GetCapsuleComponent()->GetScaledCapsuleHalfHeight() * */ GetActorUpVector();
 	SetActorLocation(Destination);
-
 	StartFade(1, 0);
 }
 

@@ -2,11 +2,10 @@
 
 
 #include "VRCharacter.h"
-#include "Engine/World.h"
 
+#include "HeadMountedDisplayFunctionLibrary.h"
+#include "IXRTrackingSystem.h"
 #include "UObject/Object.h"
-#include "Components/SplineComponent.h"
-#include "Components/SplineMeshComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "NavigationSystem.h"
@@ -17,18 +16,21 @@
 #include "Components/SplineComponent.h"
 #include "Components/SplineMeshComponent.h"
 
+// Sets default values
 AVRCharacter::AVRCharacter()
 {
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	VRRoot = CreateDefaultSubobject<USceneComponent>(TEXT("VRRoot"));
-	SetRootComponent(VRRoot);
+	VRRoot->SetupAttachment(GetRootComponent());
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(VRRoot);
 
 	TeleportPath = CreateDefaultSubobject<USplineComponent>(TEXT("TeleportPath"));
 	TeleportPath->SetupAttachment(VRRoot);
+	TeleportPath->SetVisibility(false);
 
 	DestinationMarker = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DestinationMarker"));
 	DestinationMarker->SetupAttachment(GetRootComponent());
@@ -36,11 +38,37 @@ AVRCharacter::AVRCharacter()
 
 	PostProcessComponent = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcessComponent"));
 	PostProcessComponent->SetupAttachment(GetRootComponent());
+
+	BaseTurnRate = 45.f;
+
+	
 }
 
+// Called when the game starts or when spawned
 void AVRCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Epic Comment :D // Setup Player Height for various Platforms (PS4, Vive, Oculus)
+	FName DeviceName = UHeadMountedDisplayFunctionLibrary::GetHMDDeviceName();
+
+	if (DeviceName == "SteamVR" || DeviceName == "OculusHMD")
+	{
+		// Epic Comment :D // Windows (Oculus / Vive)
+		
+		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Floor);
+
+		//FQuat hmdRotation;
+		//FVector hmdLocationOffset;
+		//GEngine->XRSystem->GetCurrentPose(IXRTrackingSystem::HMDDeviceId, hmdRotation, hmdLocationOffset);
+
+		//APawn* playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+
+		//SetActorLocation(playerPawn->GetTransform().TransformPosition(hmdLocationOffset));
+		//SetActorRotation(hmdRotation);
+
+
+	}
 
 	DestinationMarker->SetVisibility(false);
 
@@ -52,30 +80,23 @@ void AVRCharacter::BeginPlay()
 		BlinkerMaterialInstance->SetScalarParameterValue("RadiusSize", .6);
 	}
 
-
-	if (HandControllerClass)
+	LeftController = GetWorld()->SpawnActor<AHandController>(HandControllerClass);
+	if (LeftController)
 	{
-		LeftController = GetWorld()->SpawnActor<AHandController>(HandControllerClass);
-		if (LeftController)
-		{
-			LeftController->AttachToComponent(VRRoot, FAttachmentTransformRules::KeepRelativeTransform);
-			LeftController->SetOwner(this);
-			LeftController->SetHand(EControllerHand::Left);
-		}
-
-		RightController = GetWorld()->SpawnActor<AHandController>(HandControllerClass);
-		if (RightController)
-		{
-			RightController->AttachToComponent(VRRoot, FAttachmentTransformRules::KeepRelativeTransform);
-			RightController->SetOwner(this);
-			RightController->SetHand(EControllerHand::Right);
-		}
-
-		if (RightController && LeftController)
-		{
-			LeftController->PairController(RightController);
-		}
+		LeftController->AttachToComponent(VRRoot, FAttachmentTransformRules::KeepRelativeTransform);
+		LeftController->SetOwner(this);
+		LeftController->SetHand(EControllerHand::Left);
 	}
+
+	RightController = GetWorld()->SpawnActor<AHandController>(HandControllerClass);
+	if (RightController)
+	{
+		RightController->AttachToComponent(VRRoot, FAttachmentTransformRules::KeepRelativeTransform);
+		RightController->SetOwner(this);
+		RightController->SetHand(EControllerHand::Right);
+	}
+
+	LeftController->PairController(RightController);
 }
 
 // Called every frame
@@ -88,8 +109,13 @@ void AVRCharacter::Tick(float DeltaTime)
 	AddActorWorldOffset(NewCameraOffset);
 	VRRoot->AddWorldOffset(-NewCameraOffset);
 
-	UpdateDestinationMarker();
+
+	if (bStarTeleport)
+	{
+		UpdateDestinationMarker();
+	}
 	UpdateBlinkers();
+
 }
 
 // Called to bind functionality to input
@@ -99,11 +125,16 @@ void AVRCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	PlayerInputComponent->BindAxis(TEXT("Move_Y"), this, &AVRCharacter::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("Move_X"), this, &AVRCharacter::MoveRight);
+	PlayerInputComponent->BindAxis(TEXT("TurnRate"), this, &AVRCharacter::TurnAtRate);
+	PlayerInputComponent->BindAction(TEXT("Teleport"), IE_Pressed, this, &AVRCharacter::SetupTeleport);
 	PlayerInputComponent->BindAction(TEXT("Teleport"), IE_Released, this, &AVRCharacter::BeginTeleport);
 	PlayerInputComponent->BindAction(TEXT("GripLeft"), IE_Pressed, this, &AVRCharacter::GripLeft);
 	PlayerInputComponent->BindAction(TEXT("GripLeft"), IE_Released, this, &AVRCharacter::ReleaseLeft);
 	PlayerInputComponent->BindAction(TEXT("GripRight"), IE_Pressed, this, &AVRCharacter::GripRight);
 	PlayerInputComponent->BindAction(TEXT("GripRight"), IE_Released, this, &AVRCharacter::ReleaseRight);
+	PlayerInputComponent->BindAction(TEXT("ResetVR"), IE_Pressed, this, &AVRCharacter::ResetVR);
+	PlayerInputComponent->BindAction<FFooDelegate>(TEXT("RotateLeft"), IE_Pressed, this, &AVRCharacter::Rotation,-30.f);
+	PlayerInputComponent->BindAction<FFooDelegate>(TEXT("RotateRight"), IE_Pressed, this, &AVRCharacter::Rotation,30.f);
 }
 
 bool AVRCharacter::FindTeleportDestination(TArray<FVector>& OutPath, FVector& OutLocation)
@@ -220,6 +251,7 @@ void AVRCharacter::DrawTeleportPath(const TArray<FVector>& Path)
 		TeleportPath->GetLocalLocationAndTangentAtSplinePoint(i, StarPos, StartTangent);
 		TeleportPath->GetLocalLocationAndTangentAtSplinePoint(i + 1, EndPos, EndTangent);
 		SplineMesh->SetStartAndEnd(StarPos, StartTangent, EndPos, EndTangent);
+		
 	}
 
 
@@ -286,6 +318,37 @@ void AVRCharacter::MoveRight(float throttle)
 	AddMovementInput(throttle * Camera->GetRightVector());
 }
 
+void AVRCharacter::Rotation(float Rotate)
+{
+	auto RotOrigin = Camera->GetRelativeRotation();
+	auto RotOriginActor = GetActorRotation();
+	UE_LOG(LogTemp, Warning, TEXT("Before warning Rotation %f"), RotOrigin.Yaw);
+
+	RotOrigin.Yaw += Rotate;
+	RotOriginActor.Yaw += Rotate;
+	UE_LOG(LogTemp, Warning, TEXT("Middle warning Rotation %f"), RotOrigin.Yaw);
+	SetActorRelativeRotation(RotOriginActor);
+	Camera->SetRelativeRotation(RotOrigin);
+	Camera->SetWorldRotation(RotOrigin);
+	UE_LOG(LogTemp, Warning, TEXT("After warning Rotation %f"), RotOrigin.Yaw);
+
+	//APlayerController* PC = Cast<APlayerController>(GetController());
+	//PC->Get
+
+	AddControllerYawInput(Rotate);
+}
+
+void AVRCharacter::TurnAtRate(float Rate)
+{
+	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+}
+
+
+void AVRCharacter::SetupTeleport()
+{
+	bStarTeleport=true;
+	TeleportPath->SetVisibility(true);
+}
 
 void AVRCharacter::BeginTeleport()
 {
@@ -299,10 +362,14 @@ void AVRCharacter::BeginTeleport()
 void AVRCharacter::FinishTeleport()
 {
 	FVector Destination = DestinationMarker->GetComponentLocation();
-	Destination +=/* GetCapsuleComponent()->GetScaledCapsuleHalfHeight() * */ GetActorUpVector();
+	Destination += GetCapsuleComponent()->GetScaledCapsuleHalfHeight() * GetActorUpVector();
 	SetActorLocation(Destination);
 
 	StartFade(1, 0);
+
+	bStarTeleport = false;
+	DestinationMarker->SetVisibility(false);
+	DrawTeleportPath(TArray<FVector>());
 }
 
 void AVRCharacter::StartFade(float FromAlpha, float ToAlpha)
@@ -313,3 +380,11 @@ void AVRCharacter::StartFade(float FromAlpha, float ToAlpha)
 		PC->PlayerCameraManager->StartCameraFade(FromAlpha, ToAlpha, TeleportFadeTime, FLinearColor::Black);
 	}
 }
+
+
+void AVRCharacter::ResetVR()
+{
+	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
+	UE_LOG(LogTemp, Warning, TEXT("Some warning ResetVR"));
+}
+
