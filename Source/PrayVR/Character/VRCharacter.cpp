@@ -1,8 +1,7 @@
 // Created by Cookie Core
 
 
-#include "VRPawn.h"
-
+#include "VRCharacter.h"
 #include "Engine/World.h"
 
 #include "UObject/Object.h"
@@ -18,9 +17,9 @@
 #include "Components/SplineComponent.h"
 #include "Components/SplineMeshComponent.h"
 
-AVRPawn::AVRPawn()
+AVRCharacter::AVRCharacter()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	VRRoot = CreateDefaultSubobject<USceneComponent>(TEXT("VRRoot"));
 	SetRootComponent(VRRoot);
@@ -39,7 +38,7 @@ AVRPawn::AVRPawn()
 	PostProcessComponent->SetupAttachment(GetRootComponent());
 }
 
-void AVRPawn::BeginPlay()
+void AVRCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -80,7 +79,7 @@ void AVRPawn::BeginPlay()
 }
 
 // Called every frame
-void AVRPawn::Tick(float DeltaTime)
+void AVRCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -94,20 +93,20 @@ void AVRPawn::Tick(float DeltaTime)
 }
 
 // Called to bind functionality to input
-void AVRPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AVRCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis(TEXT("Move_Y"), this, &AVRPawn::MoveForward);
-	PlayerInputComponent->BindAxis(TEXT("Move_X"), this, &AVRPawn::MoveRight);
-	PlayerInputComponent->BindAction(TEXT("Teleport"), IE_Released, this, &AVRPawn::BeginTeleport);
-	PlayerInputComponent->BindAction(TEXT("GripLeft"), IE_Pressed, this, &AVRPawn::GripLeft);
-	PlayerInputComponent->BindAction(TEXT("GripLeft"), IE_Released, this, &AVRPawn::ReleaseLeft);
-	PlayerInputComponent->BindAction(TEXT("GripRight"), IE_Pressed, this, &AVRPawn::GripRight);
-	PlayerInputComponent->BindAction(TEXT("GripRight"), IE_Released, this, &AVRPawn::ReleaseRight);
+	PlayerInputComponent->BindAxis(TEXT("Move_Y"), this, &AVRCharacter::MoveForward);
+	PlayerInputComponent->BindAxis(TEXT("Move_X"), this, &AVRCharacter::MoveRight);
+	PlayerInputComponent->BindAction(TEXT("Teleport"), IE_Released, this, &AVRCharacter::BeginTeleport);
+	PlayerInputComponent->BindAction(TEXT("GripLeft"), IE_Pressed, this, &AVRCharacter::GripLeft);
+	PlayerInputComponent->BindAction(TEXT("GripLeft"), IE_Released, this, &AVRCharacter::ReleaseLeft);
+	PlayerInputComponent->BindAction(TEXT("GripRight"), IE_Pressed, this, &AVRCharacter::GripRight);
+	PlayerInputComponent->BindAction(TEXT("GripRight"), IE_Released, this, &AVRCharacter::ReleaseRight);
 }
 
-bool AVRPawn::FindTeleportDestination(TArray<FVector>& OutPath, FVector& OutLocation)
+bool AVRCharacter::FindTeleportDestination(TArray<FVector>& OutPath, FVector& OutLocation)
 {
 	if (!RightController)
 	{
@@ -152,7 +151,7 @@ bool AVRPawn::FindTeleportDestination(TArray<FVector>& OutPath, FVector& OutLoca
 	return true;
 }
 
-void AVRPawn::UpdateDestinationMarker()
+void AVRCharacter::UpdateDestinationMarker()
 {
 	TArray<FVector> Path;
 	FVector Location;
@@ -174,7 +173,7 @@ void AVRPawn::UpdateDestinationMarker()
 
 }
 
-void AVRPawn::UpdateBlinkers()
+void AVRCharacter::UpdateBlinkers()
 {
 	if (!RadiusVsVelocity)
 	{
@@ -190,7 +189,7 @@ void AVRPawn::UpdateBlinkers()
 
 }
 
-void AVRPawn::DrawTeleportPath(const TArray<FVector>& Path)
+void AVRCharacter::DrawTeleportPath(const TArray<FVector>& Path)
 {
 	UpdateSpline(Path);
 
@@ -226,7 +225,7 @@ void AVRPawn::DrawTeleportPath(const TArray<FVector>& Path)
 
 }
 
-void AVRPawn::UpdateSpline(const TArray<FVector>& Path)
+void AVRCharacter::UpdateSpline(const TArray<FVector>& Path)
 {
 	TeleportPath->ClearSplinePoints(false);
 	int32 index = 0;
@@ -240,7 +239,7 @@ void AVRPawn::UpdateSpline(const TArray<FVector>& Path)
 	TeleportPath->UpdateSpline();
 }
 
-FVector2D AVRPawn::GetBlinkerCentre()
+FVector2D AVRCharacter::GetBlinkerCentre()
 {
 	return FVector2D(.5, .5);
 	/* Maybe Sometimes
@@ -277,27 +276,27 @@ FVector2D AVRPawn::GetBlinkerCentre()
 	*/
 }
 
-void AVRPawn::MoveForward(float throttle)
+void AVRCharacter::MoveForward(float throttle)
 {
 	AddMovementInput(throttle * Camera->GetForwardVector());
 }
 
-void AVRPawn::MoveRight(float throttle)
+void AVRCharacter::MoveRight(float throttle)
 {
 	AddMovementInput(throttle * Camera->GetRightVector());
 }
 
 
-void AVRPawn::BeginTeleport()
+void AVRCharacter::BeginTeleport()
 {
 	APlayerController* PC = Cast<APlayerController>(GetController());
 	StartFade(0, 1);
 	FTimerHandle Handle;
 
-	GetWorldTimerManager().SetTimer(Handle, this, &AVRPawn::FinishTeleport, TeleportFadeTime, false);
+	GetWorldTimerManager().SetTimer(Handle, this, &AVRCharacter::FinishTeleport, TeleportFadeTime, false);
 }
 
-void AVRPawn::FinishTeleport()
+void AVRCharacter::FinishTeleport()
 {
 	FVector Destination = DestinationMarker->GetComponentLocation();
 	Destination +=/* GetCapsuleComponent()->GetScaledCapsuleHalfHeight() * */ GetActorUpVector();
@@ -306,7 +305,7 @@ void AVRPawn::FinishTeleport()
 	StartFade(1, 0);
 }
 
-void AVRPawn::StartFade(float FromAlpha, float ToAlpha)
+void AVRCharacter::StartFade(float FromAlpha, float ToAlpha)
 {
 	APlayerController* PC = Cast<APlayerController>(GetController());
 	if (PC)

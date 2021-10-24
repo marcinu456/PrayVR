@@ -3,23 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
-
-#include "Camera/CameraComponent.h"
 #include "HandController.h"
-#include "VRPawn.generated.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/Character.h"
+#include "VRCharacter.generated.h"
 
 UCLASS()
-class PRAYVR_API AVRPawn : public APawn
+class PRAYVR_API AVRCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	AVRPawn();
+	// Sets default values for this character's properties
+	AVRCharacter();
 
 protected:
+	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
 
 public:
 	// Called every frame
@@ -54,17 +54,17 @@ private:
 
 private:
 
-	// Components
-	UPROPERTY(VisibleAnywhere)
-		USceneComponent* VRRoot;
-
-	UPROPERTY(VisibleAnywhere)
-		UCameraComponent* Camera;
+	UPROPERTY()
+		class UCameraComponent* Camera;
 
 	UPROPERTY()
 		AHandController* LeftController;
 	UPROPERTY()
 		AHandController* RightController;
+
+	UPROPERTY()
+		class USceneComponent* VRRoot;
+
 
 	UPROPERTY(VisibleAnywhere)
 		class USplineComponent* TeleportPath;
@@ -112,5 +112,4 @@ private: // Configuration Parameters
 
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<AHandController> HandControllerClass;
-
 };
