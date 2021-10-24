@@ -1,15 +1,14 @@
-// Copyright (c) 2014-2021 Sombusta, All Rights Reserved.
-// SomWorks :D // MIT LICENSE // Epic VR Template Convert C++ Open Source Project.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
 using System.Collections.Generic;
 
 public class PrayVREditorTarget : TargetRules
 {
-	public PrayVREditorTarget(TargetInfo Target) : base(Target)
+	public PrayVREditorTarget( TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
-
+		DefaultBuildSettings = BuildSettingsVersion.V2;
 		ExtraModuleNames.AddRange( new string[] { "PrayVR" } );
 	}
 }

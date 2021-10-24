@@ -1,5 +1,4 @@
-// Copyright (c) 2014-2021 Sombusta, All Rights Reserved.
-// SomWorks :D // MIT LICENSE // Epic VR Template Convert C++ Open Source Project.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "PrayVR.h"
 #include "Modules/ModuleManager.h"
