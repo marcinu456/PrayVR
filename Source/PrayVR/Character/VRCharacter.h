@@ -127,4 +127,6 @@ private: // Configuration Parameters
 		TSubclassOf<AHandController> HandControllerClass;
 
 	bool bStarTeleport = false;
+
+	FVector StartLocation;
 };

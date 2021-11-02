@@ -97,6 +97,8 @@ void AVRCharacter::BeginPlay()
 	}
 
 	LeftController->PairController(RightController);
+
+	StartLocation = GetActorLocation();
 }
 
 // Called every frame
@@ -115,6 +117,11 @@ void AVRCharacter::Tick(float DeltaTime)
 		UpdateDestinationMarker();
 	}
 	UpdateBlinkers();
+	auto location = GetActorLocation();
+	if(location.Z<-100)
+	{
+		SetActorLocation(StartLocation);
+	}
 
 }
 
