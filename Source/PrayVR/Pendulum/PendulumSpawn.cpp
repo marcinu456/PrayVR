@@ -2,7 +2,7 @@
 
 
 #include "PendulumSpawn.h"
-
+#include "MathUtil.h"
 // Sets default values
 APendulumSpawn::APendulumSpawn()
 {
@@ -16,9 +16,17 @@ void APendulumSpawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	APendulum* const SpawnedActorRef = GetWorld()->SpawnActor<APendulum>(PendulumClass, GetActorLocation(), GetActorRotation());
+	int32 numberOfPendulus = 50;
+	for (int32 i = 0; i < numberOfPendulus; i++)
+	{
+		APendulum* const SpawnedActorRef = GetWorld()->SpawnActor<APendulum>(PendulumClass, GetActorLocation(), GetActorRotation());
+		//TSoftObjectPtr<APendulum> SpawnedActorRef = GetWorld()->SpawnActor<APendulum>(PendulumClass, GetActorLocation(), GetActorRotation());
 
-	PendulumActors.Add(SpawnedActorRef);
+		SpawnedActorRef->SetParameters(TMathUtilConstants<float>::Pi / 2.0 + 0.15, 150, 1, TMathUtilConstants<float>::Pi / 2.0 + 0.15 + 0.0001 * (i / float(numberOfPendulus)), 150, 1);
+
+
+		PendulumActors.Add(SpawnedActorRef);
+	}
 
 }
 

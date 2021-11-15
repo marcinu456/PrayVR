@@ -17,27 +17,34 @@ APendulum::APendulum()
 
 }
 
+void APendulum::SetParameters(double _theta0, double _length0, double _mass0, double _theta1,
+	double _length1, double _mass1)
+{
+
+	auto Frector = GetActorLocation();
+	px = Frector.Y;
+	py = Frector.Z;
+	theta0 = _theta0;
+	length0 = _length0;
+	mass0 = _mass0;
+	theta1 = _theta1;
+	length1 = _length1;
+	mass1 = _mass1;
+
+}
+
 // Called when the game starts or when spawned
 void APendulum::BeginPlay()
 {
 	Super::BeginPlay();
-	double M_PI = 3.1415926535897932384626433832795;
-	auto Frector = GetActorLocation();
-	px = Frector.Y;
-	py = Frector.Z;
-	theta0 = M_PI / 2.0 + 0.15;
-	length0 = 150;
-	mass0 = 1;
-	theta1 = M_PI / 2.0 + 0.15 + 0.0001;
-	length1 = 150;
-	mass1 = 1;
+
 }
 
 // Called every frame
 void APendulum::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	computeAnglesEuler(DeltaTime);
+	computeAnglesEuler(DeltaTime*5);
 	computePosition();
 }
 

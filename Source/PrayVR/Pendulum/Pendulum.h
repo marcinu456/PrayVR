@@ -15,6 +15,8 @@ public:
 	// Sets default values for this actor's properties
 	APendulum();
 
+	void SetParameters(double _theta0, double _length0, double _mass0, double _theta1, double _length1, double _mass1);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
