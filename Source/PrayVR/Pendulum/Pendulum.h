@@ -52,7 +52,7 @@ private:
 	float mass1 = 0;
 
 
-	float g = 9.81;
+	float g = -9.81;
 
 	UPROPERTY()
 		TArray<class USplineMeshComponent*> ColumnsPathMeshPool;

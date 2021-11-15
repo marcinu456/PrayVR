@@ -8,7 +8,7 @@
 #include "GameFramework/Character.h"
 #include "VRCharacter.generated.h"
 
-UCLASS()
+UCLASS(config = Game)
 class PRAYVR_API AVRCharacter : public ACharacter
 {
 	GENERATED_BODY()

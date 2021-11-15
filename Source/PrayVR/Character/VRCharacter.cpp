@@ -22,14 +22,18 @@ AVRCharacter::AVRCharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Set size for collision capsule
+	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
+
 	VRRoot = CreateDefaultSubobject<USceneComponent>(TEXT("VRRoot"));
 	VRRoot->SetupAttachment(GetRootComponent());
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	//Camera->SetRelativeLocation(FVector(-39.56f, 1.75f, 64.f)); // Position the camera
 	Camera->SetupAttachment(VRRoot);
 
 	TeleportPath = CreateDefaultSubobject<USplineComponent>(TEXT("TeleportPath"));
-	TeleportPath->SetupAttachment(VRRoot);
+	TeleportPath->SetupAttachment(GetRootComponent());
 	TeleportPath->SetVisibility(false);
 
 	DestinationMarker = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DestinationMarker"));
@@ -41,7 +45,7 @@ AVRCharacter::AVRCharacter()
 
 	BaseTurnRate = 45.f;
 
-	
+
 }
 
 // Called when the game starts or when spawned
@@ -55,8 +59,9 @@ void AVRCharacter::BeginPlay()
 	if (DeviceName == "SteamVR" || DeviceName == "OculusHMD")
 	{
 		// Epic Comment :D // Windows (Oculus / Vive)
-		
+
 		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Floor);
+		UE_LOG(LogTemp, Warning, TEXT("Some warning OculusHMD"));
 
 		//FQuat hmdRotation;
 		//FVector hmdLocationOffset;
