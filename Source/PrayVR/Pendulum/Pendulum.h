@@ -16,6 +16,7 @@ public:
 	APendulum();
 
 	void SetParameters(double _theta0, double _length0, double _mass0, double _theta1, double _length1, double _mass1);
+	void ResetParameters();
 
 protected:
 	// Called when the game starts or when spawned
@@ -33,7 +34,29 @@ private:
 
 	void air();
 
+	//StartParameter
+	float start_px = 0;
+	float start_py = 0;
 
+	float start_x0 = 0;
+	float start_y0 = 0;
+	float start_theta0prim = 0;
+	float start_theta0bis = 0;
+	float start_theta0 = 0;
+	float start_length0 = 0;
+	float start_mass0 = 0;
+
+	float start_x1 = 0;
+	float start_y1 = 0;
+	float start_theta1prim = 0.0;
+	float start_theta1bis = 0;
+	float start_theta1 = 0;
+	float start_length1 = 0;
+	float start_mass1 = 0;
+
+
+
+	//Current Parameter
 	float px = 0;
 	float py = 0;
 

@@ -129,4 +129,13 @@ private: // Configuration Parameters
 	bool bStarTeleport = false;
 
 	FVector StartLocation;
+
+
+	void RightTriggerPressed() { if (RightController) RightController->TriggerPressed(); }
+	void RightTriggerReleased() { if (RightController) RightController->TriggerReleased(); }
+
+	void LeftTriggerPressed() { if (LeftController) LeftController->TriggerPressed(); }
+	void LeftTriggerReleased() { if (LeftController) LeftController->TriggerReleased(); }
+
+
 };

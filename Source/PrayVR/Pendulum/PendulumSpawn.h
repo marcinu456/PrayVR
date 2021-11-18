@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Pendulum.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/Actor.h"
 #include "PendulumSpawn.generated.h"
 
@@ -24,7 +25,20 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void AddPendulum();
+	void DeletePendulum();
+	void StartPendulum();
+	void ResetPendulum();
+
+	int32 GetNumberOfPendulum() { return PendulumActors.Num(); };
+
 private:
+
+	UPROPERTY(VisibleAnywhere)
+		USceneComponent* Root;
+
+	UPROPERTY(VisibleAnywhere)
+		UWidgetComponent* ControlBar;
 
 	UPROPERTY()
 	TArray<APendulum*> PendulumActors; //row-major
@@ -32,4 +46,9 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APendulum> PendulumClass;
 
+	UPROPERTY(VisibleAnywhere)
+	int32 CurrentNumberOfPendulum;
+
+	UPROPERTY(VisibleAnywhere)
+	int32 MaxNumberOfPendulum;
 };

@@ -22,22 +22,57 @@ void APendulum::SetParameters(double _theta0, double _length0, double _mass0, do
 {
 
 	auto Frector = GetActorLocation();
-	px = Frector.Y;
-	py = Frector.Z;
-	theta0 = _theta0;
-	length0 = _length0;
-	mass0 = _mass0;
-	theta1 = _theta1;
-	length1 = _length1;
-	mass1 = _mass1;
+	start_px = Frector.Y;
+	start_py = Frector.Z;
+	start_theta0 = _theta0;
+	start_length0 = _length0;
+	start_mass0 = _mass0;
+	start_theta1 = _theta1;
+	start_length1 = _length1;
+	start_mass1 = _mass1;
 
+	px = start_px;
+	py = start_py;
+	theta0 = start_theta0;
+	length0 = start_length0;
+	mass0 = start_mass0;
+	theta1 = start_theta1;
+	length1 = start_length1;
+	mass1 = start_mass1;
+
+	computePosition();
+}
+
+void APendulum::ResetParameters()
+{
+	px = start_px;
+	py = start_py;
+	theta0 = start_theta0;
+	length0 = start_length0;
+	mass0 = start_mass0;
+	theta1 = start_theta1;
+	length1 = start_length1;
+	mass1 = start_mass1;
+
+	x0 = 0;
+	y0 = 0;
+	theta0prim = 0;
+	theta0bis = 0;
+
+	x1 = 0;
+	y1 = 0;
+	theta1prim = 0.0;
+	theta1bis = 0;
+
+
+	computePosition();
 }
 
 // Called when the game starts or when spawned
 void APendulum::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 }
 
 // Called every frame

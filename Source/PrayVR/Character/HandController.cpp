@@ -17,6 +17,9 @@ AHandController::AHandController()
 	SetRootComponent(MotionController);
 	MotionController->bDisplayDeviceModel = true;
 	MotionController->SetCollisionProfileName("OverlapAllDynamic");
+
+	Pointer = CreateDefaultSubobject<UWidgetInteractionComponent>(TEXT("Pointer"));
+	Pointer->SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
@@ -133,6 +136,16 @@ void AHandController::Release()
 			Character->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Falling);
 		}
 	}
+}
+
+void AHandController::TriggerPressed()
+{
+	Pointer->PressPointerKey(EKeys::LeftMouseButton);
+}
+
+void AHandController::TriggerReleased()
+{
+	Pointer->ReleasePointerKey(EKeys::LeftMouseButton);
 }
 
 void AHandController::PairController(AHandController* Controller)

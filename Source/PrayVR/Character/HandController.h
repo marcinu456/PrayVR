@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 
 #include "MotionControllerComponent.h"
+#include "Components/WidgetInteractionComponent.h"
 
 #include "HandController.generated.h"
 
@@ -23,6 +24,9 @@ public:
 
 	void Grip();
 	void Release();
+
+	void TriggerPressed();
+	void TriggerReleased();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -48,6 +52,9 @@ private:
 	// Parameters
 	UPROPERTY(EditDefaultsOnly)
 		class UHapticFeedbackEffect_Base* HapticEffect;
+
+	UPROPERTY(VisibleAnywhere)
+		UWidgetInteractionComponent* Pointer;
 
 	// Helpers
 
