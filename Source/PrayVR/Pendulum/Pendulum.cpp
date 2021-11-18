@@ -13,7 +13,7 @@ APendulum::APendulum()
 
 	FirstColumn = CreateDefaultSubobject<USplineComponent>(TEXT("FirstColumn"));
 	FirstColumn->SetupAttachment(GetRootComponent());
-
+	FirstColumn->CastShadow = false;
 
 }
 

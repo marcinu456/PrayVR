@@ -57,6 +57,7 @@ private:
 	void Rotation(float Rotate);
 
 	void TurnAtRate(float Rate);
+	void LookUpAtRate(float Rate);
 
 	DECLARE_DELEGATE_OneParam(FFooDelegate, float);
 
@@ -95,6 +96,9 @@ private: // Configuration Parameters
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(EditAnywhere, Category = Camera)
 		float BaseTurnRate;
+
+	UPROPERTY(EditAnywhere, Category = Camera)
+		float BaseLookUpRate;
 
 	UPROPERTY(EditAnywhere)
 		float TeleportProjectileRadius = 10;
