@@ -3,9 +3,30 @@
 
 #include "GridActor.h"
 
+#include "GameOfLifeControll.h"
+
+
+AGridActor::AGridActor()
+{
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	SetRootComponent(Root);
+
+	ControlBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("ControlBar"));
+	ControlBar->SetupAttachment(GetRootComponent());
+}
+
 void AGridActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	auto PaintingActionBar = Cast<UGameOfLifeControll>(ControlBar->GetUserWidgetObject());
+	if (PaintingActionBar)
+	{
+		PaintingActionBar->SetParentPicker(this);
+	}
 
 	TArray<UStaticMeshComponent*> Components;
 	CellActor.GetDefaultObject()->GetComponents<UStaticMeshComponent>(Components);
@@ -30,6 +51,16 @@ void AGridActor::BeginPlay()
 			ACellActor* const SpawnedActorRef = GetWorld()->SpawnActor<ACellActor>(CellActor, Loc, GetActorRotation()); //const pointer to non-const CellActor
 			CellActors.Add(SpawnedActorRef);
 		}
+	}
+}
+
+void AGridActor::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if(bISAdavance)
+	{
+		StartTimer();
 	}
 }
 
@@ -98,6 +129,7 @@ void AGridActor::Advance() {
 	UpdateNext();
 }
 
+
 void AGridActor::ToEditMode() {
 	for (int i = 0; i < Height; i++) {
 		for (int j = 0; j < Width; j++) {
@@ -105,6 +137,8 @@ void AGridActor::ToEditMode() {
 			CellActors[Index]->SetActorHiddenInGame(false);
 		}
 	}
+	bISAdavance = false;
+
 }
 
 void AGridActor::ToPlayMode() {
@@ -120,11 +154,12 @@ void AGridActor::ToPlayMode() {
 			}
 		}
 	}
+	bISAdavance = true;
 }
 
 void AGridActor::StartTimer() {
 
-	const float AdvanceTime = 0.5f; 
+	const float AdvanceTime = 1.5f; 
 	FTimerHandle AdvanceTimer;
 	GetWorld()->GetTimerManager().SetTimer(AdvanceTimer, this, &AGridActor::Advance, AdvanceTime, true);
 }

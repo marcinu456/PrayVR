@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CellActor.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/Actor.h"
 #include "GridActor.generated.h"
 
@@ -13,6 +14,9 @@ class PRAYVR_API AGridActor : public AActor
 	GENERATED_BODY()
 	
 public:
+
+	AGridActor();
+
 	/**
 	 * Updates the visibility of the cells for edit mode.
 	 * All cells are set to be visible.
@@ -32,12 +36,18 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+public:
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
 private:
 	/**
 	 * Advances the grid to the next generation.
 	 */
 	UFUNCTION() //set because called by timers
 		void Advance();
+
+	bool bISAdavance = false;
 
 	/**
 	* Counts the number of alive neighbors for the cell at index j + i * width.
@@ -74,5 +84,11 @@ private:
 	/** Class for cell. */
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Grid Setup"))
 		TSubclassOf<ACellActor> CellActor;
+
+	UPROPERTY(VisibleAnywhere)
+		USceneComponent* Root;
+
+	UPROPERTY(VisibleAnywhere)
+		UWidgetComponent* ControlBar;
 
 };
