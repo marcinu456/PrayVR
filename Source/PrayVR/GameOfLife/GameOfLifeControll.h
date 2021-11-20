@@ -43,8 +43,7 @@ private:
 	{
 		if (ParentPicker)
 		{
-			//ParentPicker->AddPendulum();
-			//NumberOfPendulum->SetText(FText::FromString(FString::FromInt(ParentPicker->GetNumberOfPendulum())));
+			NumberOfPendulum->SetText(FText::FromString(FString::SanitizeFloat(ParentPicker->AddTime())));
 		}
 	}
 
@@ -53,8 +52,7 @@ private:
 	{
 		if (ParentPicker)
 		{
-			//ParentPicker->DeletePendulum();
-			//NumberOfPendulum->SetText(FText::FromString(FString::FromInt(ParentPicker->GetNumberOfPendulum())));
+			NumberOfPendulum->SetText(FText::FromString(FString::SanitizeFloat(ParentPicker->DeleteTime())));
 		}
 	}
 
@@ -65,8 +63,8 @@ private:
 		{
 			ParentPicker->ToPlayMode();
 			StartButton->SetIsEnabled(false);
-			SpeedUpButton->SetIsEnabled(true);
-			SlowDownButton->SetIsEnabled(true);
+			//SpeedUpButton->SetIsEnabled(true);
+			//SlowDownButton->SetIsEnabled(true);
 			ResetButton->SetIsEnabled(true);
 		}
 	}
@@ -79,8 +77,8 @@ private:
 			ParentPicker->ToEditMode();
 			ParentPicker->Reset();
 			StartButton->SetIsEnabled(true);
-			SpeedUpButton->SetIsEnabled(false);
-			SlowDownButton->SetIsEnabled(false);
+			//SpeedUpButton->SetIsEnabled(false);
+			//SlowDownButton->SetIsEnabled(false);
 			ResetButton->SetIsEnabled(false);
 		}
 	}

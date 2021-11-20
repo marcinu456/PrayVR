@@ -33,12 +33,17 @@ public:
 	void ClearTimer();
 	void Reset();
 
+	float AddTime();
+	float DeleteTime();
+
 protected:
 	virtual void BeginPlay() override;
 
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+
 
 private:
 	/**
@@ -91,4 +96,9 @@ private:
 	UPROPERTY(VisibleAnywhere)
 		UWidgetComponent* ControlBar;
 
+
+	float AdvanceTime;
+
+	float maxTimer;
+	float minTimer;
 };

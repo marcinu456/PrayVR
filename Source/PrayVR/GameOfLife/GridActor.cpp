@@ -16,6 +16,11 @@ AGridActor::AGridActor()
 
 	ControlBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("ControlBar"));
 	ControlBar->SetupAttachment(GetRootComponent());
+
+	AdvanceTime = 1.5f;
+	maxTimer = 5.f;
+	minTimer = 0.1f;
+
 }
 
 void AGridActor::BeginPlay()
@@ -146,12 +151,12 @@ void AGridActor::ToPlayMode() {
 		for (int j = 0; j < Width; j++) {
 			int Index = j + i * Width;
 			const bool IsAlive = CellActors[Index]->GetAlive();
-			if (IsAlive) {
+			/*if (IsAlive) {
 				CellActors[Index]->SetActorHiddenInGame(false);
 			}
 			else {
 				CellActors[Index]->SetActorHiddenInGame(true);
-			}
+			}*/
 		}
 	}
 	bISAdavance = true;
@@ -159,7 +164,6 @@ void AGridActor::ToPlayMode() {
 
 void AGridActor::StartTimer() {
 
-	const float AdvanceTime = 1.5f; 
 	FTimerHandle AdvanceTimer;
 	GetWorld()->GetTimerManager().SetTimer(AdvanceTimer, this, &AGridActor::Advance, AdvanceTime, true);
 }
@@ -176,5 +180,22 @@ void AGridActor::Reset() {
 			ClearTimer();
 		}
 	}
+}
+
+float AGridActor::AddTime()
+{
+	if (AdvanceTime >= minTimer && AdvanceTime < maxTimer) {
+		AdvanceTime -= 0.1f;
+	}
+	return AdvanceTime;
+}
+
+float AGridActor::DeleteTime()
+{
+	if (AdvanceTime > minTimer && AdvanceTime <= maxTimer) {
+		AdvanceTime += 0.1f;
+	}
+	return AdvanceTime;
+
 }
 

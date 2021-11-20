@@ -22,14 +22,17 @@ public:
 	void SetHand(EControllerHand Hand) { MotionController->SetTrackingSource(Hand); }
 	void PairController(AHandController* Controller);
 
-	void Grip();
-	void Release();
+	virtual void Grip();
+	virtual void Release();
 
-	void TriggerPressed();
-	void TriggerReleased();
+	virtual void TriggerPressed();
+	virtual void TriggerReleased();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere)
+		UWidgetInteractionComponent* Pointer;
 
 public:
 	// Called every frame
@@ -53,8 +56,7 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 		class UHapticFeedbackEffect_Base* HapticEffect;
 
-	UPROPERTY(VisibleAnywhere)
-		UWidgetInteractionComponent* Pointer;
+
 
 	// Helpers
 
