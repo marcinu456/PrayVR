@@ -42,11 +42,16 @@ private:
 
 	void GripLeft() { LeftController->Grip(); }
 	void ReleaseLeft() { LeftController->Release(); }
+
 	void GripRight() { RightController->Grip(); }
 	void ReleaseRight() { RightController->Release(); }
 
-	void BeginTeleport();
-	void FinishTeleport();
+	void RightTriggerPressed() { if (RightController) RightController->TriggerPressed(); }
+	void RightTriggerReleased() { if (RightController) RightController->TriggerReleased(); }
+
+	void LeftTriggerPressed() { if (LeftController) LeftController->TriggerPressed(); }
+	void LeftTriggerReleased() { if (LeftController) LeftController->TriggerReleased(); }
+
 
 	void StartFade(float FromAlpha, float ToAlpha);
 

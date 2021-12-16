@@ -5,6 +5,8 @@
 
 ACellActor::ACellActor()
 {
+	PrimaryActorTick.bCanEverTick = false;
+
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("CellRootComponent"));
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CellMesh"));
 	StaticMeshComponent->SetupAttachment(RootComponent);
