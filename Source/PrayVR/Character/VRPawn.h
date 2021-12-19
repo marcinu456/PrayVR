@@ -32,13 +32,9 @@ private:
 
 	bool FindTeleportDestination(TArray<FVector>& OutPath, FVector& OutLocation);
 	void UpdateDestinationMarker();
-	void UpdateBlinkers();
 	void DrawTeleportPath(const TArray<FVector>& Path);
 	void UpdateSpline(const TArray<FVector>& Path);
-	FVector2D GetBlinkerCentre();
 
-	void MoveForward(float throttle);
-	void MoveRight(float throttle);
 
 	void GripLeft() { LeftController->Grip(); }
 	void ReleaseLeft() { LeftController->Release(); }
@@ -52,9 +48,7 @@ private:
 	void LeftTriggerPressed() { if (LeftController) LeftController->TriggerPressed(); }
 	void LeftTriggerReleased() { if (LeftController) LeftController->TriggerReleased(); }
 
-
-	void StartFade(float FromAlpha, float ToAlpha);
-
+	void ResetVR();
 
 
 private:
@@ -72,50 +66,28 @@ private:
 		AHandController* RightController;
 
 	UPROPERTY(VisibleAnywhere)
-		class USplineComponent* TeleportPath;
+		class USplineComponent* TargetPath;
+
+	UPROPERTY(EditDefaultsOnly)
+		class UStaticMesh* TargetArchMesh;
+
+	UPROPERTY(EditDefaultsOnly)
+		class UMaterialInterface* TargetArchMaterial;
 
 	UPROPERTY(VisibleAnywhere)
-		class UStaticMeshComponent* DestinationMarker;
+		class UStaticMeshComponent* TargetDestinationMarker; //TODO CreateTargetActorComponent
 
 	UPROPERTY()
-		class UPostProcessComponent* PostProcessComponent;
-
-	UPROPERTY()
-		class UMaterialInstanceDynamic* BlinkerMaterialInstance;
-
-	UPROPERTY()
-		TArray<class USplineMeshComponent*> TeleportPathMeshPool;
+		TArray<class USplineMeshComponent*> TargetPathMeshPool;
 
 private: // Configuration Parameters
 
-	UPROPERTY(EditAnywhere)
-		float TeleportProjectileRadius = 10;
-
-	UPROPERTY(EditAnywhere)
-		float TeleportProjectileSpeed = 800;
-
-	UPROPERTY(EditAnywhere)
-		float TeleportSimulationTime = 2;
-
-	UPROPERTY(EditAnywhere)
-		float TeleportFadeTime = 1;
-
-	UPROPERTY(EditAnywhere)
-		FVector TeleportProjectionExtent = FVector(100, 100, 100);
-
-	UPROPERTY(EditAnywhere)
-		class UMaterialInterface* BlinkerMaterialBase;
-
-	UPROPERTY(EditAnywhere)
-		class UCurveFloat* RadiusVsVelocity;
-
+	// Config
 	UPROPERTY(EditDefaultsOnly)
-		class UStaticMesh* TeleportArchMesh;
-
+		TSubclassOf<AHandController> RightHandControllerClass;
 	UPROPERTY(EditDefaultsOnly)
-		class UMaterialInterface* TeleportArchMaterial;
+		TSubclassOf<AHandController> LeftHandControllerClass;
 
-	UPROPERTY(EditDefaultsOnly)
-		TSubclassOf<AHandController> HandControllerClass;
+
 
 };

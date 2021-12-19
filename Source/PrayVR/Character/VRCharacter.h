@@ -45,6 +45,11 @@ private:
 	void GripRight() { RightController->Grip(); }
 	void ReleaseRight() { RightController->Release(); }
 
+	void RightTriggerPressed() { if (RightController) RightController->TriggerPressed(); }
+	void RightTriggerReleased() { if (RightController) RightController->TriggerReleased(); }
+
+	void LeftTriggerPressed() { if (LeftController) LeftController->TriggerPressed(); }
+	void LeftTriggerReleased() { if (LeftController) LeftController->TriggerReleased(); }
 
 	void SetupTeleport();
 	void BeginTeleport();
@@ -74,7 +79,11 @@ private:
 	UPROPERTY()
 		AHandController* RightController;
 
-
+	// Config
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<AHandController> RightHandControllerClass;
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<AHandController> LeftHandControllerClass;
 
 	UPROPERTY(VisibleAnywhere)
 		class USplineComponent* TeleportPath;
@@ -127,19 +136,14 @@ private: // Configuration Parameters
 	UPROPERTY(EditDefaultsOnly)
 		class UMaterialInterface* TeleportArchMaterial;
 
-	UPROPERTY(EditDefaultsOnly)
-		TSubclassOf<AHandController> HandControllerClass;
+
 
 	bool bStarTeleport = false;
 
 	FVector StartLocation;
 
 
-	void RightTriggerPressed() { if (RightController) RightController->TriggerPressed(); }
-	void RightTriggerReleased() { if (RightController) RightController->TriggerReleased(); }
 
-	void LeftTriggerPressed() { if (LeftController) LeftController->TriggerPressed(); }
-	void LeftTriggerReleased() { if (LeftController) LeftController->TriggerReleased(); }
 
 
 };

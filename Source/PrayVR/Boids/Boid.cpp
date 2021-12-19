@@ -8,7 +8,7 @@
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "PrayVR/Character/HandController_Boids.h"
+//#include "PrayVR/Character/HandController_Boids.h"
 
 ABoid::ABoid() {
 	PrimaryActorTick.bCanEverTick = false;
@@ -41,7 +41,7 @@ void ABoid::BeginPlay() {
 		UE_LOG(LogTemp, Error, TEXT("Failed to find BoidManager in scene"));
 	}
 	
-	BoidTarget = Cast<AHandController_Boids>(UGameplayStatics::GetActorOfClass(GetWorld(), AHandController_Boids::StaticClass()));
+	BoidTarget = Cast<ABoidTarget>(UGameplayStatics::GetActorOfClass(GetWorld(), ABoidTarget::StaticClass()));
 	if (!BoidTarget) {
 		UE_LOG(LogTemp, Error, TEXT("Failed to find BoidTarget in scene"));
 	}

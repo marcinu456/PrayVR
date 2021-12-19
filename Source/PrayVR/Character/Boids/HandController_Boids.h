@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "HandController.h"
+#include "PrayVR/Character/HandController.h"
 #include "HandController_Boids.generated.h"
 
 /**

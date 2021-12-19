@@ -24,13 +24,40 @@ public:
 
 	bool IsBoidsFollowTarget() const { return BoidsFollowTarget; }
 
+	void SetBoidsFollowTarget(bool bFollow)
+	{
+		BoidsFollowTarget = bFollow;
+		UE_LOG(LogTemp, Warning, TEXT("SetBoidsFollowTarget"));
+
+	}
+
 	float GetSeparationWeight() const { return SeparationWeight; }
+
+	void SetSeparationWeight(float value)
+	{
+		SeparationWeight = value;
+	}
 
 	float GetAlignmentWeight() const { return AlignmentWeight; }
 
+	void SetAlignmentWeight(float value)
+	{
+		AlignmentWeight = value;
+	}
+
 	float GetCohesionWeight() const { return CohesionWeight; }
 
+	void SetCohesionWeight(float value)
+	{
+		CohesionWeight = value;
+	}
+
 	float GetTargetWeight() const { return TargetWeight; }
+
+	void SetTargetWeight(float value)
+	{
+		TargetWeight = value;
+	}
 
 	TArray<ABoid*> GetManagedBoids() const { return ManagedBoids; }
 

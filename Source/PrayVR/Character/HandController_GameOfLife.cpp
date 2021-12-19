@@ -3,6 +3,8 @@
 
 #include "HandController_GameOfLife.h"
 
+#include "Components/StaticMeshComponent.h"
+
 AHandController_GameOfLife::AHandController_GameOfLife()
 {
 	Cube = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Cube"));

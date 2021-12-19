@@ -86,7 +86,7 @@ void AVRCharacter::BeginPlay()
 		BlinkerMaterialInstance->SetScalarParameterValue("RadiusSize", .6);
 	}
 
-	LeftController = GetWorld()->SpawnActor<AHandController>(HandControllerClass);
+	LeftController = GetWorld()->SpawnActor<AHandController>(LeftHandControllerClass);
 	if (LeftController)
 	{
 		LeftController->AttachToComponent(VRRoot, FAttachmentTransformRules::KeepRelativeTransform);
@@ -94,7 +94,7 @@ void AVRCharacter::BeginPlay()
 		LeftController->SetHand(EControllerHand::Left);
 	}
 
-	RightController = GetWorld()->SpawnActor<AHandController>(HandControllerClass);
+	RightController = GetWorld()->SpawnActor<AHandController>(RightHandControllerClass);
 	if (RightController)
 	{
 		RightController->AttachToComponent(VRRoot, FAttachmentTransformRules::KeepRelativeTransform);

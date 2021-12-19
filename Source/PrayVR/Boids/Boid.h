@@ -74,7 +74,7 @@ protected:
 private:
 	class ABoidManager* Manager;
 
-	class AHandController_Boids* BoidTarget;
+	class ABoidTarget* BoidTarget;
 
 	FRotator NextBoidRotation;
 	FVector NextBoidWorldOffset;

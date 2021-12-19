@@ -29,15 +29,12 @@ AVRPawn::AVRPawn()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(VRRoot);
 
-	TeleportPath = CreateDefaultSubobject<USplineComponent>(TEXT("TeleportPath"));
-	TeleportPath->SetupAttachment(VRRoot);
+	TargetPath = CreateDefaultSubobject<USplineComponent>(TEXT("TargetPath"));
+	TargetPath->SetupAttachment(VRRoot);
 
-	DestinationMarker = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DestinationMarker"));
-	DestinationMarker->SetupAttachment(GetRootComponent());
-	DestinationMarker->SetCollisionProfileName("NoCollision");
-
-	PostProcessComponent = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcessComponent"));
-	PostProcessComponent->SetupAttachment(GetRootComponent());
+	TargetDestinationMarker = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DestinationMarker"));
+	TargetDestinationMarker->SetupAttachment(GetRootComponent());
+	TargetDestinationMarker->SetCollisionProfileName("NoCollision");
 }
 
 void AVRPawn::BeginPlay()
@@ -55,39 +52,22 @@ void AVRPawn::BeginPlay()
 
 	UE_LOG(LogTemp, Warning, TEXT("Some warning message %s"), *DeviceName.ToString());
 
-	DestinationMarker->SetVisibility(false);
+	TargetDestinationMarker-> SetVisibility(false);
 
-	if (BlinkerMaterialBase)
+
+	if (RightHandControllerClass)
 	{
-		BlinkerMaterialInstance = UMaterialInstanceDynamic::Create(BlinkerMaterialBase, this);
-		PostProcessComponent->AddOrUpdateBlendable(BlinkerMaterialInstance);
-
-		BlinkerMaterialInstance->SetScalarParameterValue("RadiusSize", .6);
+		RightController = GetWorld()->SpawnActor<AHandController>(RightHandControllerClass);
+		RightController->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::SnapToTargetIncludingScale);
+		RightController->SetOwner(this);
+		RightController->SetHand(EControllerHand::Right);
 	}
-
-
-	if (HandControllerClass)
+	if (LeftHandControllerClass)
 	{
-		LeftController = GetWorld()->SpawnActor<AHandController>(HandControllerClass);
-		if (LeftController)
-		{
-			LeftController->AttachToComponent(VRRoot, FAttachmentTransformRules::KeepRelativeTransform);
-			LeftController->SetOwner(this);
-			LeftController->SetHand(EControllerHand::Left);
-		}
-
-		RightController = GetWorld()->SpawnActor<AHandController>(HandControllerClass);
-		if (RightController)
-		{
-			RightController->AttachToComponent(VRRoot, FAttachmentTransformRules::KeepRelativeTransform);
-			RightController->SetOwner(this);
-			RightController->SetHand(EControllerHand::Right);
-		}
-
-		if (RightController && LeftController)
-		{
-			LeftController->PairController(RightController);
-		}
+		LeftController = GetWorld()->SpawnActor<AHandController>(LeftHandControllerClass);
+		LeftController->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::SnapToTargetIncludingScale);
+		LeftController->SetOwner(this);
+		LeftController->SetHand(EControllerHand::Left);
 	}
 }
 
@@ -96,15 +76,7 @@ void AVRPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FVector NewCameraOffset = Camera->GetComponentLocation() - GetActorLocation();
-	NewCameraOffset.Z = 0;
-	AddActorWorldOffset(NewCameraOffset);
-	VRRoot->AddWorldOffset(-NewCameraOffset);
-
 	UpdateDestinationMarker();
-	UpdateBlinkers();
-
-
 }
 
 // Called to bind functionality to input
@@ -112,13 +84,17 @@ void AVRPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis(TEXT("Move_Y"), this, &AVRPawn::MoveForward);
-	PlayerInputComponent->BindAxis(TEXT("Move_X"), this, &AVRPawn::MoveRight);
-	PlayerInputComponent->BindAction(TEXT("Teleport"), IE_Released, this, &AVRPawn::BeginTeleport);
 	PlayerInputComponent->BindAction(TEXT("GripLeft"), IE_Pressed, this, &AVRPawn::GripLeft);
 	PlayerInputComponent->BindAction(TEXT("GripLeft"), IE_Released, this, &AVRPawn::ReleaseLeft);
 	PlayerInputComponent->BindAction(TEXT("GripRight"), IE_Pressed, this, &AVRPawn::GripRight);
 	PlayerInputComponent->BindAction(TEXT("GripRight"), IE_Released, this, &AVRPawn::ReleaseRight);
+	PlayerInputComponent->BindAction(TEXT("TriggerRight"), EInputEvent::IE_Pressed, this, &AVRPawn::RightTriggerPressed);
+	PlayerInputComponent->BindAction(TEXT("TriggerRight"), EInputEvent::IE_Released, this, &AVRPawn::RightTriggerReleased);
+	PlayerInputComponent->BindAction(TEXT("TriggerLeft"), EInputEvent::IE_Pressed, this, &AVRPawn::LeftTriggerPressed);
+	PlayerInputComponent->BindAction(TEXT("TriggerLeft"), EInputEvent::IE_Released, this, &AVRPawn::LeftTriggerPressed);
+
+	PlayerInputComponent->BindAction(TEXT("ResetVR"), IE_Pressed, this, &AVRPawn::ResetVR);
+
 }
 
 bool AVRPawn::FindTeleportDestination(TArray<FVector>& OutPath, FVector& OutLocation)
@@ -132,36 +108,36 @@ bool AVRPawn::FindTeleportDestination(TArray<FVector>& OutPath, FVector& OutLoca
 	FVector Look = RightController->GetActorForwardVector();
 
 
-	FPredictProjectilePathParams Params(TeleportProjectileRadius, Start, Look * TeleportProjectileSpeed,
-		TeleportSimulationTime, ECC_Visibility, this);
+	//FPredictProjectilePathParams Params(TeleportProjectileRadius, Start, Look * TeleportProjectileSpeed,
+	//	TeleportSimulationTime, ECC_Visibility, this);
 
-	Params.bTraceComplex = true; //You can disable if you have better collision on scene
+	//Params.bTraceComplex = true; //You can disable if you have better collision on scene
 
 	FPredictProjectilePathResult Result;
 
-	bool bHit = UGameplayStatics::PredictProjectilePath(this, Params, Result);
+	//bool bHit = UGameplayStatics::PredictProjectilePath(this, Params, Result);
 
-	if (!bHit)
-	{
-		return false;
-	}
-
-
-	//OutPath.Empty();
-	for (auto& PointData : Result.PathData)
-	{
-		OutPath.Add(PointData.Location);
-	}
-
-	FNavLocation NavLocation;
-	bool bOnNavMesh = UNavigationSystemV1::GetCurrent(GetWorld())->ProjectPointToNavigation(Result.HitResult.Location, NavLocation, TeleportProjectionExtent);
-
-	if (!bOnNavMesh)
-	{
-		return false;
-	}
-
-	OutLocation = NavLocation.Location;
+	//if (!bHit)
+	//{
+	//	return false;
+	//}
+	//
+	//
+	////OutPath.Empty();
+	//for (auto& PointData : Result.PathData)
+	//{
+	//	OutPath.Add(PointData.Location);
+	//}
+	//
+	//FNavLocation NavLocation;
+	//bool bOnNavMesh = UNavigationSystemV1::GetCurrent(GetWorld())->ProjectPointToNavigation(Result.HitResult.Location, NavLocation, TeleportProjectionExtent);
+	//
+	//if (!bOnNavMesh)
+	//{
+	//	return false;
+	//}
+	//
+	//OutLocation = NavLocation.Location;
 
 	return true;
 }
@@ -174,41 +150,26 @@ void AVRPawn::UpdateDestinationMarker()
 
 	if (bHasDestination)
 	{
-		DestinationMarker->SetWorldLocation(Location);
-		DestinationMarker->SetVisibility(true);
+		TargetDestinationMarker-> SetWorldLocation(Location);
+		TargetDestinationMarker-> SetVisibility(true);
 
 		DrawTeleportPath(Path);
 	}
 	else
 	{
-		DestinationMarker->SetVisibility(false);
+		TargetDestinationMarker-> SetVisibility(false);
 		DrawTeleportPath(TArray<FVector>());
 
 	}
 
 }
 
-void AVRPawn::UpdateBlinkers()
-{
-	if (!RadiusVsVelocity)
-	{
-		return;
-	}
-	float Speed = GetVelocity().Size();
-	float Radius = RadiusVsVelocity->GetFloatValue(Speed);
-	BlinkerMaterialInstance->SetScalarParameterValue("RadiusSize", Radius);
-
-	FVector2D Centre = GetBlinkerCentre();
-
-	BlinkerMaterialInstance->SetVectorParameterValue("Centre", FLinearColor(Centre.X, Centre.Y, 0));
-
-}
 
 void AVRPawn::DrawTeleportPath(const TArray<FVector>& Path)
 {
 	UpdateSpline(Path);
 
-	for (auto SplineMesh : TeleportPathMeshPool)
+	for (auto SplineMesh : TargetPathMeshPool)
 	{
 		SplineMesh->SetVisibility(false);
 	}
@@ -216,24 +177,24 @@ void AVRPawn::DrawTeleportPath(const TArray<FVector>& Path)
 	int32 SegmentNum = Path.Num() - 1;
 	for (int32 i = 0; i < SegmentNum; ++i)
 	{
-		if (TeleportPathMeshPool.Num() <= i)
+		if (TargetPathMeshPool.Num() <= i)
 		{
 			USplineMeshComponent* SplineMesh = NewObject<USplineMeshComponent>(this);
 			SplineMesh->SetMobility(EComponentMobility::Movable);
-			SplineMesh->AttachToComponent(TeleportPath, FAttachmentTransformRules::KeepRelativeTransform);
-			SplineMesh->SetStaticMesh(TeleportArchMesh);
-			SplineMesh->SetMaterial(0, TeleportArchMaterial);
+			SplineMesh->AttachToComponent(TargetPath, FAttachmentTransformRules::KeepRelativeTransform);
+			SplineMesh->SetStaticMesh(TargetArchMesh);
+			SplineMesh->SetMaterial(0, TargetArchMaterial);
 			SplineMesh->RegisterComponent();
 
-			TeleportPathMeshPool.Add(SplineMesh);
+			TargetPathMeshPool.Add(SplineMesh);
 		}
 
-		USplineMeshComponent* SplineMesh = TeleportPathMeshPool[i];
+		USplineMeshComponent* SplineMesh = TargetPathMeshPool[i];
 		SplineMesh->SetVisibility(true);
 
 		FVector StarPos, StartTangent, EndPos, EndTangent;
-		TeleportPath->GetLocalLocationAndTangentAtSplinePoint(i, StarPos, StartTangent);
-		TeleportPath->GetLocalLocationAndTangentAtSplinePoint(i + 1, EndPos, EndTangent);
+		TargetPath->GetLocalLocationAndTangentAtSplinePoint(i, StarPos, StartTangent);
+		TargetPath->GetLocalLocationAndTangentAtSplinePoint(i + 1, EndPos, EndTangent);
 		SplineMesh->SetStartAndEnd(StarPos, StartTangent, EndPos, EndTangent);
 	}
 
@@ -242,88 +203,20 @@ void AVRPawn::DrawTeleportPath(const TArray<FVector>& Path)
 
 void AVRPawn::UpdateSpline(const TArray<FVector>& Path)
 {
-	TeleportPath->ClearSplinePoints(false);
+	TargetPath->ClearSplinePoints(false);
 	int32 index = 0;
 	for (auto& Point : Path)
 	{
-		FVector LocalPosition = TeleportPath->GetComponentTransform().InverseTransformPosition(Point);
-		TeleportPath->AddPoint(FSplinePoint(index, LocalPosition, ESplinePointType::Curve), false);
+		FVector LocalPosition = TargetPath->GetComponentTransform().InverseTransformPosition(Point);
+		TargetPath->AddPoint(FSplinePoint(index, LocalPosition, ESplinePointType::Curve), false);
 		index++;
 	}
 
-	TeleportPath->UpdateSpline();
+	TargetPath->UpdateSpline();
 }
 
-FVector2D AVRPawn::GetBlinkerCentre()
+void AVRPawn::ResetVR()
 {
-	return FVector2D(.5, .5);
-	/* Maybe Sometimes
-	FVector MovementDirection = GetVelocity().GetSafeNormal();
-	if(MovementDirection.IsNearlyZero())
-	{
-		return FVector2D(.5, .5);
-	}
-	FVector WorldStationaryLaction;
-
-	if(FVector::DotProduct(Camera->GetForwardVector(),MovementDirection)>0)
-	{
-		WorldStationaryLaction = Camera->GetComponentLocation() + MovementDirection * 100;
-	}
-	else
-	{
-		WorldStationaryLaction = Camera->GetComponentLocation() - MovementDirection * 100;
-	}
-
-	APlayerController* PC = Cast<APlayerController>(GetController());
-	if (!PC)
-	{
-		return FVector2D(.5, .5);
-	}
-
-	FVector2D ScreenStationaryLocation;
-	PC->ProjectWorldLocationToScreen(WorldStationaryLaction, ScreenStationaryLocation);
-
-	int32 SizeX, SizeY;
-	PC->GetViewportSize(SizeX, SizeY);
-	ScreenStationaryLocation.X /= SizeX;
-	ScreenStationaryLocation.Y /= SizeY;
-	return ScreenStationaryLocation;
-	*/
-}
-
-void AVRPawn::MoveForward(float throttle)
-{
-	AddMovementInput(throttle * Camera->GetForwardVector());
-}
-
-void AVRPawn::MoveRight(float throttle)
-{
-	AddMovementInput(throttle * Camera->GetRightVector());
-}
-
-
-void AVRPawn::BeginTeleport()
-{
-	APlayerController* PC = Cast<APlayerController>(GetController());
-	StartFade(0, 1);
-	FTimerHandle Handle;
-
-	GetWorldTimerManager().SetTimer(Handle, this, &AVRPawn::FinishTeleport, TeleportFadeTime, false);
-}
-
-void AVRPawn::FinishTeleport()
-{
-	FVector Destination = DestinationMarker->GetComponentLocation();
-	Destination +=/* GetCapsuleComponent()->GetScaledCapsuleHalfHeight() * */ GetActorUpVector();
-	SetActorLocation(Destination);
-	StartFade(1, 0);
-}
-
-void AVRPawn::StartFade(float FromAlpha, float ToAlpha)
-{
-	APlayerController* PC = Cast<APlayerController>(GetController());
-	if (PC)
-	{
-		PC->PlayerCameraManager->StartCameraFade(FromAlpha, ToAlpha, TeleportFadeTime, FLinearColor::Black);
-	}
+	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
+	UE_LOG(LogTemp, Warning, TEXT("Some warning ResetVR"));
 }
