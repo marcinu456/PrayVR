@@ -3,6 +3,8 @@
 
 #include "BoidsMenu.h"
 
+#include "Kismet/GameplayStatics.h"
+
 bool UBoidsMenu::Initialize()
 {
 	if (!Super::Initialize()) return false;
@@ -22,6 +24,9 @@ bool UBoidsMenu::Initialize()
 
 	if (!TargetSlider) return false;
 	TargetSlider->OnValueChanged.AddDynamic(this, &UBoidsMenu::TargetSliderValueChanged);
+
+	if (!QuitButton) return false;
+	QuitButton->OnClicked.AddDynamic(this, &UBoidsMenu::BackToPreviousLevel);
 
 	return true;
 
@@ -92,4 +97,9 @@ void UBoidsMenu::CohesionSliderValueChanged(float value)
 void UBoidsMenu::TargetSliderValueChanged(float value)
 {
 	ParentBoidsManager->SetTargetWeight(value);
+}
+
+void UBoidsMenu::BackToPreviousLevel()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), "Level0");
 }

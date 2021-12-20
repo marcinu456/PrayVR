@@ -47,6 +47,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (BindWidget))
 		USlider* TargetSlider;
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (BindWidget))
+		UButton* QuitButton;
+
 private:
 	UPROPERTY()
 		ABoidManager* ParentBoidsManager;
@@ -67,4 +70,7 @@ private:
 
 	UFUNCTION()
 		void TargetSliderValueChanged(float value);
+
+	UFUNCTION()
+		void BackToPreviousLevel();
 };
