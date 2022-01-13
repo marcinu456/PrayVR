@@ -5,7 +5,7 @@
 
 #include "GameOfLifeControll.h"
 
-
+//TODO Create base grid actor and child class to 2d and 3d
 AGridActor::AGridActor()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
