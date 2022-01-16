@@ -8,8 +8,10 @@ ACellActor::ACellActor()
 	PrimaryActorTick.bCanEverTick = false;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("CellRootComponent"));
+	RootComponent->SetMobility(EComponentMobility::Static);
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CellMesh"));
 	StaticMeshComponent->SetupAttachment(RootComponent);
+	StaticMeshComponent->SetMobility(EComponentMobility::Static);
 
 	FScriptDelegate OnClickedDelegate;
 	FScriptDelegate OnBeginCursorOverDelegate;
@@ -20,6 +22,7 @@ ACellActor::ACellActor()
 	OnClicked.Add(OnClickedDelegate);
 	OnBeginCursorOver.Add(OnBeginCursorOverDelegate);
 	OnEndCursorOver.Add(OnEndCursorOverDelegate);
+
 }
 
 void ACellActor::BeginPlay()
@@ -70,10 +73,10 @@ void ACellActor::Update()
 	if (AliveNext) {
 		StaticMeshComponent->SetMaterial(0, ClickedMaterial);
 		Alive = true;
-		//SetActorHiddenInGame(false);
+		SetActorHiddenInGame(false);
 	}
 	else {
-		//SetActorHiddenInGame(true);
+		SetActorHiddenInGame(true);
 		StaticMeshComponent->SetMaterial(0, EndCursorOverMaterial);
 		Alive = false;
 	}
@@ -83,6 +86,16 @@ void ACellActor::Reset()
 {
 	StaticMeshComponent->SetMaterial(0, EndCursorOverMaterial);
 	Alive = false;
+}
+
+void ACellActor::Random()
+{
+	if (Alive) {
+		StaticMeshComponent->SetMaterial(0, BeginCursorOverMaterial);
+	}
+	else {
+		StaticMeshComponent->SetMaterial(0, ClickedMaterial);
+	}
 }
 
 

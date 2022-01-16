@@ -19,4 +19,5 @@ private:
 	void SpeedUp();
 	void SlowDown();
 	void Reset();
+	void Random();
 };

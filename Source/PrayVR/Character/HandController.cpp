@@ -105,7 +105,7 @@ bool AHandController::CanClimb() const
 	return false;
 }
 
-void AHandController::Grip()
+void AHandController::GripPressed()
 {
 	if (!bCanClimb) return;
 
@@ -124,7 +124,7 @@ void AHandController::Grip()
 	}
 }
 
-void AHandController::Release()
+void AHandController::GripReleased()
 {
 	if (bIsClimbing)
 	{
@@ -146,6 +146,10 @@ void AHandController::TriggerPressed()
 void AHandController::TriggerReleased()
 {
 	Pointer->ReleasePointerKey(EKeys::LeftMouseButton);
+}
+
+void AHandController::ThumbStick(float Rate)
+{
 }
 
 void AHandController::PairController(AHandController* Controller)

@@ -36,11 +36,11 @@ private:
 	void UpdateSpline(const TArray<FVector>& Path);
 
 
-	void GripLeft() { LeftController->Grip(); }
-	void ReleaseLeft() { LeftController->Release(); }
+	void GripLeft() { LeftController->GripPressed(); }
+	void ReleaseLeft() { LeftController->GripReleased(); }
 
-	void GripRight() { RightController->Grip(); }
-	void ReleaseRight() { RightController->Release(); }
+	void GripRight() { RightController->GripPressed(); }
+	void ReleaseRight() { RightController->GripReleased(); }
 
 	void RightTriggerPressed() { if (RightController) RightController->TriggerPressed(); }
 	void RightTriggerReleased() { if (RightController) RightController->TriggerReleased(); }

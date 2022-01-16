@@ -180,9 +180,9 @@ void APendulum::computePosition()
 
 
 
-	USplineMeshComponent* SplineMesh = ColumnsPathMeshPool[1];
-	auto ss1 = SplineMesh->GetStartPosition();
-	auto ss2 = SplineMesh->GetEndPosition();
+	//USplineMeshComponent* SplineMesh = ColumnsPathMeshPool[1];
+	//auto ss1 = SplineMesh->GetStartPosition();
+	//auto ss2 = SplineMesh->GetEndPosition();
 	//UE_LOG(LogTemp, Warning, TEXT("Text, %f, %f, end %f, %f"), ss1.X, ss1.Y, ss2.X, ss2.Y);
 
 

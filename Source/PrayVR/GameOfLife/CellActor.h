@@ -37,6 +37,8 @@ public:
 
 	void Reset();
 
+	void Random();
+
 	void SetXYZ(int32 _X, int32 _Y, int32 _Z)
 	{
 		X = _X;

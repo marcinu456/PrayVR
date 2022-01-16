@@ -40,10 +40,10 @@ private:
 	void MoveForward(float throttle);
 	void MoveRight(float throttle);
 
-	void GripLeft() { LeftController->Grip(); }
-	void ReleaseLeft() { LeftController->Release(); }
-	void GripRight() { RightController->Grip(); }
-	void ReleaseRight() { RightController->Release(); }
+	void GripLeft() { LeftController->GripPressed(); }
+	void ReleaseLeft() { LeftController->GripReleased(); }
+	void GripRight() { RightController->GripPressed(); }
+	void ReleaseRight() { RightController->GripReleased(); }
 
 	void RightTriggerPressed() { if (RightController) RightController->TriggerPressed(); }
 	void RightTriggerReleased() { if (RightController) RightController->TriggerReleased(); }

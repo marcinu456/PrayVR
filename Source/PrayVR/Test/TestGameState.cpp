@@ -63,6 +63,14 @@ void ATestGameState::Reset() {
 	SetEditMode(true);
 }
 
+void ATestGameState::Random()
+{
+	for (AGridActor3D* Grid : GridActors) {
+		Grid->RandomGrid();
+	}
+	SetEditMode(true);
+}
+
 void ATestGameState::SpeedUp() {
 	if (AdvanceTime >= 0.2f) {
 		AdvanceTime -= 0.1f;

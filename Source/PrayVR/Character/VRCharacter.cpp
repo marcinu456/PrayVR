@@ -139,7 +139,7 @@ void AVRCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis(TEXT("Move_Y"), this, &AVRCharacter::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("Move_X"), this, &AVRCharacter::MoveRight);
 	PlayerInputComponent->BindAxis(TEXT("TurnRate"), this, &AVRCharacter::TurnAtRate);
-	PlayerInputComponent->BindAxis("LookUp", this, &AVRCharacter::LookUpAtRate);
+	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &AVRCharacter::LookUpAtRate);
 	PlayerInputComponent->BindAction(TEXT("Teleport"), IE_Pressed, this, &AVRCharacter::SetupTeleport);
 	PlayerInputComponent->BindAction(TEXT("Teleport"), IE_Released, this, &AVRCharacter::BeginTeleport);
 	PlayerInputComponent->BindAction(TEXT("GripLeft"), IE_Pressed, this, &AVRCharacter::GripLeft);
@@ -366,6 +366,7 @@ void AVRCharacter::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+	if (RightController) RightController->ThumbStick(Rate);
 }
 
 void AVRCharacter::SetupTeleport()

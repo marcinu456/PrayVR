@@ -22,11 +22,13 @@ public:
 	void SetHand(EControllerHand Hand) { MotionController->SetTrackingSource(Hand); }
 	void PairController(AHandController* Controller);
 
-	virtual void Grip();
-	virtual void Release();
+	virtual void GripPressed();
+	virtual void GripReleased();
 
 	virtual void TriggerPressed();
 	virtual void TriggerReleased();
+
+	virtual void ThumbStick(float Rate);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

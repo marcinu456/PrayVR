@@ -22,9 +22,32 @@ public:
 	void TriggerPressed() override;
 	void TriggerReleased() override;
 
+	void GripPressed() override;
+	void GripReleased() override;
+
+	void ThumbStick(float Rate) override;
 
 private:
 
 
 	//TODO add targetBoids
+
+
+	//UPROPERTY()
+	//	TArray<class USplineMeshComponent*> ColumnsPathMeshPool;
+
+	//UPROPERTY(VisibleAnywhere)
+	//	class USplineComponent* TargetSpline;
+
+	UPROPERTY(EditDefaultsOnly)
+		class UStaticMeshComponent* StartTarget;
+	UPROPERTY(EditDefaultsOnly)
+		class UStaticMeshComponent* DestinationTarget;
+
+	//UPROPERTY(EditDefaultsOnly)
+	//	class UMaterialInterface* FirstColumnArchMaterial;
+
+	float TargetPos;
+
+	class ABoidTarget* BoidTarget;
 };

@@ -174,3 +174,20 @@ void AGridActor3D::Reset() {
 	}
 }
 
+void AGridActor3D::RandomGrid()
+{
+	Reset();
+
+	for (int i = 0; i < Height; i++) {
+		for (int j = 0; j < Width; j++) {
+			for (int k = 0; k < Deep; k++) {
+				if (FMath::RandRange(0.0f, 1.0f) < 0.2f)
+				{
+					CellActors3D[i][j][k]->SetAlive(true);
+					CellActors3D[i][j][k]->Random();
+				}
+			}
+		}
+	}
+}
+

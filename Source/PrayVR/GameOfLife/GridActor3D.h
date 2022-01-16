@@ -53,6 +53,7 @@ public:
 	void StartTimer();
 	void ClearTimer();
 	void Reset();
+	void RandomGrid();
 
 protected:
 	virtual void BeginPlay() override;

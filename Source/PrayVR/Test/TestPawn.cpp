@@ -14,6 +14,7 @@ void ATestPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Speed Up", IE_Pressed, this, &ATestPawn::SpeedUp);
 	PlayerInputComponent->BindAction("Slow Down", IE_Pressed, this, &ATestPawn::SlowDown);
 	PlayerInputComponent->BindAction("Reset", IE_Pressed, this, &ATestPawn::Reset);
+	PlayerInputComponent->BindAction("Randomgrid", IE_Pressed, this, &ATestPawn::Random);
 
 }
 
@@ -58,4 +59,11 @@ void ATestPawn::Reset()
 	UE_LOG(LogTemp, Warning, TEXT("resetting"));
 	ATestGameState* const MyGameState = Cast<ATestGameState>(UGameplayStatics::GetGameState(GetWorld()));
 	MyGameState->Reset();
+}
+
+void ATestPawn::Random()
+{
+	UE_LOG(LogTemp, Warning, TEXT("random"));
+	ATestGameState* const MyGameState = Cast<ATestGameState>(UGameplayStatics::GetGameState(GetWorld()));
+	MyGameState->Random();
 }

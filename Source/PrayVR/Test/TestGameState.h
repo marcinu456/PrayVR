@@ -28,6 +28,7 @@ public:
 	void StartTimers();
 	void ClearTimers();
 	void Reset();
+	void Random();
 
 	void SpeedUp();
 	void SlowDown();
