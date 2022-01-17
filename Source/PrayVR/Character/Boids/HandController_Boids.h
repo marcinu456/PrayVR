@@ -15,7 +15,9 @@ class PRAYVR_API AHandController_Boids : public AHandController
 	GENERATED_BODY()
 public:
 	AHandController_Boids();
-
+protected:
+	void BeginPlay() override;
+public:
 	void Tick(float DeltaTime) override;
 
 
@@ -50,4 +52,8 @@ private:
 	float TargetPos;
 
 	class ABoidTarget* BoidTarget;
+
+	bool Grip;
+
+	void MoveTarget();
 };
