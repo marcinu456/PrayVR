@@ -16,10 +16,13 @@ AWolfAgent::AWolfAgent()
 
 	Sphere1 = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
 	Sphere1->InitSphereRadius(100.0f);
-	Sphere1->SetupAttachment(RootComponent);
+	Sphere1->SetupAttachment(StaticMeshComponent);
 
 	Sphere1->OnComponentBeginOverlap.AddDynamic(this, &AWolfAgent::OnOverlapBegin);       // set up a notification for when this component overlaps something
 	Sphere1->OnComponentEndOverlap.AddDynamic(this, &AWolfAgent::OnOverlapEnd);
+
+	Sphere1->SetGenerateOverlapEvents(false);
+
 
 }
 

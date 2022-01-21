@@ -33,6 +33,9 @@ public:
 	UFUNCTION()
 		virtual void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+
+	void SpawnAgent();
+
 private:
 
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
@@ -42,4 +45,6 @@ private:
 		TSubclassOf<class AAgentBase> AgentSpawnActor;
 
 	bool bTest = true;
+
+	class AHandController_Agents* ActorCast;
 };

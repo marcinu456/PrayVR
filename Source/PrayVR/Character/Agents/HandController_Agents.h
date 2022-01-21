@@ -14,4 +14,24 @@ class PRAYVR_API AHandController_Agents : public AHandController
 {
 	GENERATED_BODY()
 
+
+
+		virtual void ActorBeginOverlap(AActor* OverlappedActor, AActor* OtherActor) override;
+
+		virtual void ActorEndOverlap(AActor* OverlappedActor, AActor* OtherActor) override;
+
+	bool bCanPickupAgent;
+
+	class AAgentSpawnBox* AgentSpawnBox;
+
+public:
+
+	void GripPressed() override;
+	void GripReleased() override;
+
+	class AAgentBase* Agent;
+
+	bool CanPickUp();
+
+
 };

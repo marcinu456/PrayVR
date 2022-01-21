@@ -36,17 +36,26 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 		UWidgetInteractionComponent* Pointer;
 
+	// Parameters
+	UPROPERTY(EditDefaultsOnly)
+		class UHapticFeedbackEffect_Base* HapticEffect;
+
+	UPROPERTY(VisibleAnywhere)
+		UMotionControllerComponent* MotionController;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+
 
 private:
 	// Callbacks
 
 	UFUNCTION()
-		void ActorBeginOverlap(AActor* OverlappedActor, AActor* OtherActor);
+		virtual void ActorBeginOverlap(AActor* OverlappedActor, AActor* OtherActor);
 	UFUNCTION()
-		void ActorEndOverlap(AActor* OverlappedActor, AActor* OtherActor);
+		virtual void ActorEndOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
 	//UFUNCTION() Check why this isn't work
 	//	void ComponentBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -54,9 +63,7 @@ private:
 	//UFUNCTION()
 	//	void ComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	// Parameters
-	UPROPERTY(EditDefaultsOnly)
-		class UHapticFeedbackEffect_Base* HapticEffect;
+
 
 
 
@@ -66,8 +73,7 @@ private:
 
 	// Default sub object
 
-	UPROPERTY(VisibleAnywhere)
-		UMotionControllerComponent* MotionController;
+
 
 	// State
 	bool bCanClimb = false;

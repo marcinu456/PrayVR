@@ -6,6 +6,7 @@
 #include "RabbitAgent.h"
 #include "PrayVR/Butterfly/ButterflyActor.h"
 #include "PrayVR/Character/HandController.h"
+#include "PrayVR/Character/Agents/HandController_Agents.h"
 
 // Sets default values
 AAgentSpawnBox::AAgentSpawnBox()
@@ -28,11 +29,8 @@ void AAgentSpawnBox::BeginPlay()
 
 	if (AgentSpawnActor)
 	{
-		const FVector Origin = GetActorLocation();
 
-		const FVector Loc(Origin.X + FMath::RandRange(-500, 500), Origin.Y + FMath::RandRange(-500, 500), Origin.Z);
-		auto const SpawnedActorRef = GetWorld()->SpawnActor<AAgentBase>(AgentSpawnActor, Loc, GetActorRotation());
-		SpawnedActorRef->SetActorTickEnabled(false);
+		
 	}
 }
 
@@ -47,25 +45,15 @@ void AAgentSpawnBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 
+	ActorCast = Cast<AHandController_Agents>(OtherActor);
 
 
-	auto ActorCast = Cast<AHandController>(OtherActor);
-
-	if (ActorCast && AgentSpawnActor)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("AAgentSpawnBox::OnOverlapBegin"));
-
-
-		//SpawnedActorRef->SetActorTickEnabled(false);
-		//SpawnedActorRef->AttachToActor(OtherActor, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
-
-	}
 }
 
 void AAgentSpawnBox::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	auto ActorCast = Cast<AHandController>(OtherActor);
+	//ActorCast = Cast<AHandController_Agents>(OtherActor);
 
 	if (ActorCast && AgentSpawnActor)
 	{
@@ -79,8 +67,32 @@ void AAgentSpawnBox::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* O
 		//SpawnedActorRef->AttachToActor(OtherActor, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
 	}
 
+	if(ActorCast == Cast<AHandController_Agents>(OtherActor))
+	{
+		ActorCast = nullptr;
+	}
+
 	//TODO find why agent component crash editor/ probobly error with overlap, added to agent hand controller info about agents
 	//TODO find if i can spawn with agent base
 	//TODO 3 bp child, next move to agent hand contoller and create rest with board for agents, and better movable
+}
+
+void AAgentSpawnBox::SpawnAgent()
+{
+	if (ActorCast && AgentSpawnActor)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AAgentSpawnBox::OnOverlapBegin"));
+
+
+		if (ActorCast)
+		{
+			const FVector Origin = GetActorLocation();
+
+			const FVector Loc(Origin.X + FMath::RandRange(-500, 500), Origin.Y + FMath::RandRange(-500, 500), Origin.Z);
+			auto const SpawnedActorRef = GetWorld()->SpawnActor<AAgentBase>(AgentSpawnActor, ActorCast->GetActorLocation(), GetActorRotation());
+			ActorCast->Agent = SpawnedActorRef;
+			SpawnedActorRef->AttachToActor(ActorCast, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
+		}
+	}
 }
 

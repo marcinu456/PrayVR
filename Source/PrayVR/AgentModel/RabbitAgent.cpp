@@ -15,10 +15,12 @@ ARabbitAgent::ARabbitAgent()
 
 	Sphere1 = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
 	Sphere1->InitSphereRadius(100.0f);
-	Sphere1->SetupAttachment(RootComponent);
+	Sphere1->SetupAttachment(StaticMeshComponent);
 
 	Sphere1->OnComponentBeginOverlap.AddDynamic(this, &ARabbitAgent::OnOverlapBegin);       // set up a notification for when this component overlaps something
 	Sphere1->OnComponentEndOverlap.AddDynamic(this, &ARabbitAgent::OnOverlapEnd);
+
+	Sphere1->SetGenerateOverlapEvents(false);
 }
 
 void ARabbitAgent::Tick(float DeltaTime)
