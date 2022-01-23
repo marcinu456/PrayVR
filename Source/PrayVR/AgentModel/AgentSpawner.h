@@ -3,7 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "GameFramework/Actor.h"
+#include "PrayVR/Test/TestPawn.h"
 #include "AgentSpawner.generated.h"
 
 class AWolfAgent;
@@ -51,4 +53,16 @@ private:
 	const double WOLF_VELOCITY = 2;
 
 	size_t iter = 0;
+
+
+	UFUNCTION()
+	void RespondToOnPlayerJump(float location);
+
+	TArray<class AAgentBase*> AgentBases;
+
+public:
+
+	void AddAgent(AAgentBase* _Agent);
+
+	void DeleteAgent(AAgentBase* _Agent);
 };

@@ -89,7 +89,7 @@ void AAgentSpawnBox::SpawnAgent()
 			const FVector Origin = GetActorLocation();
 
 			const FVector Loc(Origin.X + FMath::RandRange(-500, 500), Origin.Y + FMath::RandRange(-500, 500), Origin.Z);
-			auto const SpawnedActorRef = GetWorld()->SpawnActor<AAgentBase>(AgentSpawnActor, ActorCast->GetActorLocation(), GetActorRotation());
+			auto const SpawnedActorRef = GetWorld()->SpawnActor<AAgentBase>(AgentSpawnActor, ActorCast->GetActorLocation(), ActorCast->GetActorRotation());
 			ActorCast->Agent = SpawnedActorRef;
 			SpawnedActorRef->AttachToActor(ActorCast, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
 		}

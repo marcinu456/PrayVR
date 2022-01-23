@@ -3,6 +3,7 @@
 
 #include "WolfAgent.h"
 
+#include "AgentSpawner.h"
 #include "RabbitAgent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -21,7 +22,7 @@ AWolfAgent::AWolfAgent()
 	Sphere1->OnComponentBeginOverlap.AddDynamic(this, &AWolfAgent::OnOverlapBegin);       // set up a notification for when this component overlaps something
 	Sphere1->OnComponentEndOverlap.AddDynamic(this, &AWolfAgent::OnOverlapEnd);
 
-	Sphere1->SetGenerateOverlapEvents(false);
+	//Sphere1->SetGenerateOverlapEvents(false);
 
 
 }
@@ -113,8 +114,13 @@ void AWolfAgent::Move()
 		hp--;
 	}
 	else {
-		Destroy();
+		OnDestroy();
 	}
+
+	//if(FVector::Dist(AgentSpawner->GetActorLocation(), GetActorLocation()) > 200)
+	//{
+	//	OnDestroy();
+	//}
 }
 
 
@@ -125,7 +131,7 @@ void AWolfAgent::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Oth
 
 	if (Cast<ARabbitAgent>(OtherActor) == atractorRabbit && atractorRabbit)
 	{
-		atractorRabbit->Destroy();
+		atractorRabbit->OnDestroy();
 		hp = WOLF_MAX_HP;
 		atractorRabbit = nullptr;
 		UE_LOG(LogTemp, Warning, TEXT("Some Wolf warning castActor"));
@@ -138,12 +144,12 @@ void AWolfAgent::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Oth
 		atractorWolf->hp = WOLF_MAX_HUNGRY_HP_LEVEL;
 		for (int j = 0; j < WOLF_REPRODUCE_COUNT; j++) {
 
-			TArray<UStaticMeshComponent*> Components;
+			//TArray<UStaticMeshComponent*> Components;
+			//
+			//WolfActor.GetDefaultObject()->GetComponents<UStaticMeshComponent>(Components);
+			//ensure(Components.Num() > 0);
 
-			WolfActor.GetDefaultObject()->GetComponents<UStaticMeshComponent>(Components);
-			ensure(Components.Num() > 0);
-
-			const FVector Loc(GetActorLocation().X + FMath::RandRange(-500, 500), GetActorLocation().Y + FMath::RandRange(-500, 500), GetActorLocation().Z);
+			const FVector Loc(GetActorLocation().X + FMath::RandRange(-50, 50), GetActorLocation().Y + FMath::RandRange(-50, 50), GetActorLocation().Z);
 			auto const SpawnedActorRef = GetWorld()->SpawnActor<AWolfAgent>(WolfActor, Loc, GetActorRotation());
 			SpawnedActorRef->hp = WOLF_MAX_HUNGRY_HP_LEVEL;
 		}

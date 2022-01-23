@@ -4,32 +4,32 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "AgentBase.generated.h"
+#include "AgentTable.generated.h"
 
 UCLASS()
-class PRAYVR_API AAgentBase : public AActor
+class PRAYVR_API AAgentTable : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AAgentBase();
+	AAgentTable();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
+public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-protected:
+private:
 
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* StaticMeshComponent;
 
-	/** sphere component */
+	/** box component */
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-		class USphereComponent* Sphere1;
+		class UBoxComponent* BoxCollision;
 
 public:
 	/** called when something enters the sphere component */
@@ -41,14 +41,5 @@ public:
 		virtual void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 
-	bool currentStatus = true;
-	int32 hp;
-
-	virtual void OnDestroy();
-
-protected:
-	virtual void Move() {};
-
-	class AAgentSpawner* AgentSpawner;
-
+	void SetUpAgent(class AAgentBase* _Agent);
 };

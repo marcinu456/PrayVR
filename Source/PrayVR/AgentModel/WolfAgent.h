@@ -33,8 +33,8 @@ private:
 	const size_t WOLF_COUNT = 4;
 	const size_t WOLF_MAX_HP = 500;
 	const size_t WOLF_MAX_HUNGRY_HP_LEVEL = 150;
-	const double WOLF_VELOCITY = 2;
-	const double WOLF_REPRODUCE_COUNT = 2;
+	const double WOLF_VELOCITY = 1.4;
+	const double WOLF_REPRODUCE_COUNT = 1;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Grid Setup"))
 		TSubclassOf<AWolfAgent> WolfActor;

@@ -23,6 +23,7 @@ class PRAYVR_API AHandController_Agents : public AHandController
 	bool bCanPickupAgent;
 
 	class AAgentSpawnBox* AgentSpawnBox;
+	class AAgentTable* AgentTable;
 
 public:
 

@@ -16,6 +16,8 @@ class PRAYVR_API ARabbitAgent : public AAgentBase
 public:
 	ARabbitAgent();
 
+protected:
+	//virtual void BeginPlay() override;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

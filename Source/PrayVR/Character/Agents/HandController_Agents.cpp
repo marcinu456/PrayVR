@@ -5,6 +5,7 @@
 
 #include "PrayVR/AgentModel/AgentBase.h"
 #include "PrayVR/AgentModel/AgentSpawnBox.h"
+#include "PrayVR/AgentModel/AgentTable.h"
 
 void AHandController_Agents::ActorBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
@@ -23,6 +24,7 @@ void AHandController_Agents::ActorBeginOverlap(AActor* OverlappedActor, AActor* 
 	}
 
 	AgentSpawnBox = Cast<AAgentSpawnBox>(OtherActor);
+	AgentTable = Cast<AAgentTable>(OtherActor);
 
 	bCanPickupAgent = bNewCanPickupAgent;
 }
@@ -34,6 +36,10 @@ void AHandController_Agents::ActorEndOverlap(AActor* OverlappedActor, AActor* Ot
 	if (AgentSpawnBox)
 	{
 		AgentSpawnBox = nullptr;
+	}
+	if (AgentTable)
+	{
+		AgentTable = nullptr;
 	}
 }
 
@@ -74,10 +80,17 @@ void AHandController_Agents::GripReleased()
 {
 	Super::GripReleased();
 
+	if(AgentTable)
+	{
+		AgentTable->SetUpAgent(Agent);
+		Agent->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		Agent = nullptr;
+	}
 
 	if(Agent)
 	{
 		Agent->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		Agent->OnDestroy();
 	}
 
 	

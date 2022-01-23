@@ -19,6 +19,6 @@ void APlantAgent::Tick(float DeltaTime)
 		hp--;
 	}
 	else {
-		Destroy();
+		OnDestroy();
 	}
 }
