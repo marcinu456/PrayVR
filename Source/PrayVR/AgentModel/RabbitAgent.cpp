@@ -24,6 +24,30 @@ ARabbitAgent::ARabbitAgent()
 	//Sphere1->SetGenerateOverlapEvents(false);
 }
 
+//void ARabbitAgent::SetBasicMaterial()
+//{
+//	Super::SetBasicMaterial();
+//
+//	if (StaticMeshComponent)
+//		StaticMeshComponent->SetMaterial(0, BasicMaterial);
+//}
+//
+//void ARabbitAgent::SetBeginMaterial()
+//{
+//	Super::SetBeginMaterial();
+//
+//	if (StaticMeshComponent)
+//		StaticMeshComponent->SetMaterial(0, BeginOverMaterial);
+//}
+//
+//void ARabbitAgent::SetClickedMaterial()
+//{
+//	Super::SetClickedMaterial();
+//
+//	if (StaticMeshComponent)
+//		StaticMeshComponent->SetMaterial(0, ClickedMaterial);
+//}
+
 void ARabbitAgent::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

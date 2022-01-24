@@ -59,6 +59,9 @@ void AAgentTable::SetUpAgent(AAgentBase* Agent)
 		auto NewAgentLoc = FVector(AgentLoc.X, AgentLoc.Y, GetActorLocation().Z+10);
 		auto NewAgentRoc = FRotator(GetActorRotation().Pitch, AgentRot.Yaw, GetActorRotation().Roll);
 		Agent->SetActorLocationAndRotation(NewAgentLoc, NewAgentRoc);
+		Agent->SetOverlap(true);
+		Agent->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+
 	}
 }
 

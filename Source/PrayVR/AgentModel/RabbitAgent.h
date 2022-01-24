@@ -16,6 +16,12 @@ class PRAYVR_API ARabbitAgent : public AAgentBase
 public:
 	ARabbitAgent();
 
+	//void SetBasicMaterial() override;
+	//
+	//void SetBeginMaterial() override;
+	//
+	//void SetClickedMaterial() override;
+
 protected:
 	//virtual void BeginPlay() override;
 

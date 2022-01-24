@@ -46,9 +46,27 @@ public:
 
 	virtual void OnDestroy();
 
+	void SetOverlap(bool bOverlap);
+
+	void SetBasicMaterial();
+
+	void SetBeginMaterial();
+
+	void SetClickedMaterial();
+
 protected:
 	virtual void Move() {};
 
 	class AAgentSpawner* AgentSpawner;
+
+	/** Material for when the cell is alive. */
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Materials"))
+		UMaterialInterface* BasicMaterial;
+	/** Material for when player hovers over the cell in edit mode. */
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Materials"))
+		UMaterialInterface* BeginOverMaterial;
+	/** Material for when the cell is alive. */
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Materials"))
+		UMaterialInterface* ClickedMaterial;
 
 };

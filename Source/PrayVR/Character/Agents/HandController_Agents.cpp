@@ -7,6 +7,13 @@
 #include "PrayVR/AgentModel/AgentSpawnBox.h"
 #include "PrayVR/AgentModel/AgentTable.h"
 
+AHandController_Agents::AHandController_Agents()
+{
+	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
+	StaticMeshComponent->SetupAttachment(RootComponent);
+
+}
+
 void AHandController_Agents::ActorBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
 	bool bNewCanPickupAgent = CanPickUp();
@@ -23,9 +30,30 @@ void AHandController_Agents::ActorBeginOverlap(AActor* OverlappedActor, AActor* 
 		}
 	}
 
-	AgentSpawnBox = Cast<AAgentSpawnBox>(OtherActor);
-	AgentTable = Cast<AAgentTable>(OtherActor);
 
+	if (!Agent)
+	{
+		Agent = Cast<AAgentBase>(OtherActor);
+		if(Agent)
+		{
+			Agent->SetBeginMaterial();
+		}
+	}
+	if (!AgentSpawnBox)
+	{
+		AgentSpawnBox = Cast<AAgentSpawnBox>(OtherActor);
+	}
+	if (!AgentTable)
+	{
+		AgentTable = Cast<AAgentTable>(OtherActor);
+
+		if(Agent&& AgentTable && bGripPressed)
+		{
+			Agent->SetClickedMaterial();
+
+		}
+
+	}
 	bCanPickupAgent = bNewCanPickupAgent;
 }
 
@@ -33,6 +61,11 @@ void AHandController_Agents::ActorEndOverlap(AActor* OverlappedActor, AActor* Ot
 {
 	bCanPickupAgent = CanPickUp();
 
+	if (Agent&&!bGripPressed)
+	{
+		Agent->SetBasicMaterial();
+		Agent = nullptr;
+	}
 	if (AgentSpawnBox)
 	{
 		AgentSpawnBox = nullptr;
@@ -65,6 +98,15 @@ void AHandController_Agents::GripPressed()
 {
 	Super::GripPressed();
 
+
+	if (Agent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT(" I see agent"));
+		Agent->AttachToComponent(StaticMeshComponent, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
+	}
+
+
+
 	if(AgentSpawnBox)
 	{
 		UE_LOG(LogTemp, Warning, TEXT(" AHandController_Agents::GripPressed()"));
@@ -74,16 +116,17 @@ void AHandController_Agents::GripPressed()
 
 	if (!bCanPickupAgent) return;
 
+	bGripPressed = true;
 }
 
 void AHandController_Agents::GripReleased()
 {
 	Super::GripReleased();
 
-	if(AgentTable)
+	if(AgentTable && Agent)
 	{
+		Agent->SetBasicMaterial();
 		AgentTable->SetUpAgent(Agent);
-		Agent->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 		Agent = nullptr;
 	}
 
@@ -94,5 +137,5 @@ void AHandController_Agents::GripReleased()
 	}
 
 	
-
+	bGripPressed = false;
 }
