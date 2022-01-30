@@ -59,7 +59,7 @@ void ARabbitAgent::Move()
 {
 	Super::Move();
 
-
+	float ConstantZ = GetActorLocation().Z;
 
 	if (hp <= RABBIT_MAX_HUNGRY_HP_LEVEL) {
 		TArray<AActor*> Plants;
@@ -133,6 +133,9 @@ void ARabbitAgent::Move()
 		}
 	}
 
+	SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, ConstantZ));
+
+
 	if (hp != 0) {
 		hp--;
 	}
@@ -172,7 +175,12 @@ void ARabbitAgent::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
 
 			const FVector Loc(GetActorLocation().X + FMath::RandRange(-50, 50), GetActorLocation().Y + FMath::RandRange(-50, 50), GetActorLocation().Z);
 			auto const SpawnedActorRef = GetWorld()->SpawnActor<ARabbitAgent>(RabbitActor, Loc, GetActorRotation());
-			SpawnedActorRef->hp = RABBIT_MAX_HUNGRY_HP_LEVEL;
+			if (SpawnedActorRef)
+			{
+				SpawnedActorRef->hp = RABBIT_MAX_HUNGRY_HP_LEVEL;
+				SpawnedActorRef->SetUpAgent(true);
+			}
+
 		}
 		atractorRabbit = nullptr;
 

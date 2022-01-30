@@ -54,6 +54,8 @@ public:
 
 	void SetClickedMaterial();
 
+	void SetUpAgent(bool bSetup);
+
 protected:
 	virtual void Move() {};
 

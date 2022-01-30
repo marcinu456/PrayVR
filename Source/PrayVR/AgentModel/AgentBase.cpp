@@ -18,6 +18,8 @@ void AAgentBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	SetActorTickEnabled(false);
+
 	TArray<AActor*> Spawners;
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAgentSpawner::StaticClass(), Spawners);
@@ -28,9 +30,10 @@ void AAgentBase::BeginPlay()
 		auto CastSpawner = Cast<AAgentSpawner>(Spawner);
 		CastSpawner->AddAgent(this);
 	}
-
-	Sphere1->SetGenerateOverlapEvents(false);
-
+	if (Sphere1)
+	{
+		Sphere1->SetGenerateOverlapEvents(false);
+	}
 }
 
 // Called every frame
@@ -92,5 +95,15 @@ void AAgentBase::SetClickedMaterial()
 {
 	if (StaticMeshComponent)
 	StaticMeshComponent->SetMaterial(0, ClickedMaterial);
+}
+
+void AAgentBase::SetUpAgent(bool bSetup)
+{
+	SetActorTickEnabled(bSetup);
+
+	if (Sphere1)
+	{
+		Sphere1->SetGenerateOverlapEvents(bSetup);
+	}
 }
 

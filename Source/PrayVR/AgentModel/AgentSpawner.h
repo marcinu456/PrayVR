@@ -60,9 +60,24 @@ private:
 
 	TArray<class AAgentBase*> AgentBases;
 
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Grid Setup"))
+		float SizeOfGrid = 100;
+
+	UPROPERTY(VisibleAnywhere)
+		USceneComponent* Root;
+
+	UPROPERTY(VisibleAnywhere)
+	class UWidgetComponent* ControlBar;
+
 public:
 
 	void AddAgent(AAgentBase* _Agent);
 
 	void DeleteAgent(AAgentBase* _Agent);
+
+
+public:
+	void StartAgents();
+
+	void ResetAgents();
 };

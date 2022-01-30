@@ -3,9 +3,11 @@
 
 #include "AgentSpawner.h"
 
+#include "AgentControl.h"
 #include "PlantAgent.h"
 #include "RabbitAgent.h"
 #include "WolfAgent.h"
+#include "Components/WidgetComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -13,54 +15,66 @@ AAgentSpawner::AAgentSpawner()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
+	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	SetRootComponent(Root);
+
+	ControlBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("ControlBar"));
+	ControlBar->SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
 void AAgentSpawner::BeginPlay()
 {
 	Super::BeginPlay();
+	SetActorTickEnabled(false);
 
-	const FVector Origin = GetActorLocation();
-
-	TArray<UStaticMeshComponent*> Components;
-	PlantActor.GetDefaultObject()->GetComponents<UStaticMeshComponent>(Components);
-	ensure(Components.Num() > 0);
-
-
-	for (size_t i = 0; i < PLANT_COUNT; i++)
+	auto AgentActionBar = Cast<UAgentControl>(ControlBar->GetUserWidgetObject());
+	if (AgentActionBar)
 	{
-		const FVector Loc(Origin.X + FMath::RandRange(-50, 50), Origin.Y + FMath::RandRange(-50, 50), Origin.Z);
-		APlantAgent* const SpawnedActorRef = GetWorld()->SpawnActor<APlantAgent>(PlantActor, Loc, GetActorRotation());
-		SpawnedActorRef->hp = PLANT_MAX_HP;
-		//Plantser.Add(SpawnedActorRef);
+		AgentActionBar->SetParentPicker(this);
 	}
 
-
-	RabbitActor.GetDefaultObject()->GetComponents<UStaticMeshComponent>(Components);
-	ensure(Components.Num() > 0);
-
-
-	for (size_t i = 0; i < RABBIT_COUNT; i++)
-	{
-		const FVector Loc(Origin.X + FMath::RandRange(-50, 50), Origin.Y + FMath::RandRange(-50, 50), Origin.Z);
-		auto const SpawnedActorRef = GetWorld()->SpawnActor<ARabbitAgent>(RabbitActor, Loc, GetActorRotation());
-		SpawnedActorRef->hp = RABBIT_MAX_HUNGRY_HP_LEVEL;
-		//Rabbits.Add(SpawnedActorRef);
-	}
-
-
-	WolfActor.GetDefaultObject()->GetComponents<UStaticMeshComponent>(Components);
-	ensure(Components.Num() > 0);
-
-
-	for (size_t i = 0; i < WOLF_COUNT; i++)
-	{
-		const FVector Loc(Origin.X + FMath::RandRange(-50, 50), Origin.Y + FMath::RandRange(-50, 50), Origin.Z);
-		auto const SpawnedActorRef = GetWorld()->SpawnActor<AWolfAgent>(WolfActor, Loc, GetActorRotation());
-		SpawnedActorRef->hp = WOLF_MAX_HUNGRY_HP_LEVEL;
-		//Wolfes.Add(SpawnedActorRef);
-	}
+	//const FVector Origin = GetActorLocation();
+	//
+	//TArray<UStaticMeshComponent*> Components;
+	//PlantActor.GetDefaultObject()->GetComponents<UStaticMeshComponent>(Components);
+	//ensure(Components.Num() > 0);
+	//
+	//
+	//for (size_t i = 0; i < PLANT_COUNT; i++)
+	//{
+	//	const FVector Loc(Origin.X + FMath::RandRange(-50, 50), Origin.Y + FMath::RandRange(-50, 50), Origin.Z);
+	//	APlantAgent* const SpawnedActorRef = GetWorld()->SpawnActor<APlantAgent>(PlantActor, Loc, GetActorRotation());
+	//	SpawnedActorRef->hp = PLANT_MAX_HP;
+	//	//Plantser.Add(SpawnedActorRef);
+	//}
+	//
+	//
+	//RabbitActor.GetDefaultObject()->GetComponents<UStaticMeshComponent>(Components);
+	//ensure(Components.Num() > 0);
+	//
+	//
+	//for (size_t i = 0; i < RABBIT_COUNT; i++)
+	//{
+	//	const FVector Loc(Origin.X + FMath::RandRange(-50, 50), Origin.Y + FMath::RandRange(-50, 50), Origin.Z);
+	//	auto const SpawnedActorRef = GetWorld()->SpawnActor<ARabbitAgent>(RabbitActor, Loc, GetActorRotation());
+	//	SpawnedActorRef->hp = RABBIT_MAX_HUNGRY_HP_LEVEL;
+	//	//Rabbits.Add(SpawnedActorRef);
+	//}
+	//
+	//
+	//WolfActor.GetDefaultObject()->GetComponents<UStaticMeshComponent>(Components);
+	//ensure(Components.Num() > 0);
+	//
+	//
+	//for (size_t i = 0; i < WOLF_COUNT; i++)
+	//{
+	//	const FVector Loc(Origin.X + FMath::RandRange(-50, 50), Origin.Y + FMath::RandRange(-50, 50), Origin.Z);
+	//	auto const SpawnedActorRef = GetWorld()->SpawnActor<AWolfAgent>(WolfActor, Loc, GetActorRotation());
+	//	SpawnedActorRef->hp = WOLF_MAX_HUNGRY_HP_LEVEL;
+	//	//Wolfes.Add(SpawnedActorRef);
+	//}
 }
 
 // Called every frame
@@ -111,7 +125,11 @@ void AAgentSpawner::Tick(float DeltaTime)
 		for (int i = 0; i < PLANT_REPRODUCE_COUNT; i++) {
 			const FVector Loc(Origin.X + FMath::RandRange(-50, 50), Origin.Y + FMath::RandRange(-50, 50), Origin.Z);
 			APlantAgent* const SpawnedActorRef = GetWorld()->SpawnActor<APlantAgent>(PlantActor, Loc, GetActorRotation());
-			SpawnedActorRef->hp = PLANT_MAX_HP;
+			if (SpawnedActorRef)
+			{
+				SpawnedActorRef->hp = PLANT_MAX_HP;
+				SpawnedActorRef->SetUpAgent(true);
+			}
 			//Plantser.Add(SpawnedActorRef);
 		}
 		iter = 0;
@@ -125,11 +143,6 @@ void AAgentSpawner::Tick(float DeltaTime)
 	//UGameplayStatics::GetAllActorsOfClass(GetWorld(), ARabbitAgent::StaticClass(), Rabbits);
 
 
-	for (auto& AgentBase : AgentBases)
-	{
-
-	}
-
 	if (Rabbits.Num() == 0)
 	{
 		const FVector Origin = GetActorLocation();
@@ -139,7 +152,11 @@ void AAgentSpawner::Tick(float DeltaTime)
 		for (int i = 0; i < RABBIT_COUNT; i++) {
 			const FVector Loc(Origin.X + FMath::RandRange(-50, 50), Origin.Y + FMath::RandRange(-50, 50), Origin.Z);
 			auto const SpawnedActorRef = GetWorld()->SpawnActor<ARabbitAgent>(RabbitActor, Loc, GetActorRotation());
-			SpawnedActorRef->hp = RABBIT_MAX_HUNGRY_HP_LEVEL;
+			if (SpawnedActorRef)
+			{
+				SpawnedActorRef->hp = RABBIT_MAX_HUNGRY_HP_LEVEL;
+				SpawnedActorRef->SetUpAgent(true);
+			}
 		}
 	}
 
@@ -150,10 +167,6 @@ void AAgentSpawner::Tick(float DeltaTime)
 
 	//UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWolfAgent::StaticClass(), Wolfes);
 
-	for (auto& AgentBase : AgentBases)
-	{
-
-	}
 
 	if (Wolfes.Num() <= 0)
 	{
@@ -164,18 +177,22 @@ void AAgentSpawner::Tick(float DeltaTime)
 		for (int i = 0; i < WOLF_COUNT; i++) {
 			const FVector Loc(Origin.X + FMath::RandRange(-50, 50), Origin.Y + FMath::RandRange(-50, 50), Origin.Z);
 			auto const SpawnedActorRef = GetWorld()->SpawnActor<AWolfAgent>(WolfActor, Loc, GetActorRotation());
-			SpawnedActorRef->hp = WOLF_MAX_HUNGRY_HP_LEVEL;
+			if (SpawnedActorRef)
+			{
+				SpawnedActorRef->hp = WOLF_MAX_HUNGRY_HP_LEVEL;
+				SpawnedActorRef->SetUpAgent(true);
+			}
 		}
 	}
 
 
 	iter++;
 
-	UE_LOG(LogTemp, Warning, TEXT("numberofagents %d"), AgentBases.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("numberofagents %d"), AgentBases.Num());
 
 	for(int32 i=0; i< AgentBases.Num();i++)
 	{
-		if(FVector::Dist(AgentBases[i]->GetActorLocation(), GetActorLocation())>100)
+		if(FVector::Dist(AgentBases[i]->GetActorLocation(), GetActorLocation())> SizeOfGrid)
 		{
 			AgentBases[i]->OnDestroy();
 			break;
@@ -192,7 +209,14 @@ void AAgentSpawner::RespondToOnPlayerJump(float location)
 
 void AAgentSpawner::AddAgent(AAgentBase* _Agent)
 {
-	AgentBases.Add(_Agent);
+	if (AgentBases.Num() < 120)
+	{
+		AgentBases.Add(_Agent);
+	}
+	else
+	{
+		_Agent->OnDestroy();
+	}
 
 	//UE_LOG(LogTemp, Warning, TEXT("AAgentSpawner::AddAgent(AAgentBase* _Agent)"));
 	//auto CastSpawner = Cast<ARabbitAgent>(_Agent);
@@ -200,13 +224,41 @@ void AAgentSpawner::AddAgent(AAgentBase* _Agent)
 	//{
 	//	UE_LOG(LogTemp, Warning, TEXT("CastAsRabbit"));
 	//}
+	UE_LOG(LogTemp, Warning, TEXT("numberofagents %d"), AgentBases.Num());
 }
 
 void AAgentSpawner::DeleteAgent(AAgentBase* _Agent)
 {
 	AgentBases.Remove(_Agent);
 
+	UE_LOG(LogTemp, Warning, TEXT("numberofagents %d"), AgentBases.Num());
+}
 
+void AAgentSpawner::StartAgents()
+{
+	UE_LOG(LogTemp, Warning, TEXT("AAgentSpawner::StartAgents()"));
+
+
+
+
+	SetActorTickEnabled(true);
+
+	for (int32 i = 0; i < AgentBases.Num(); i++)
+	{
+		AgentBases[i]->SetUpAgent(true);
+	}
+
+}
+
+void AAgentSpawner::ResetAgents()
+{
+	UE_LOG(LogTemp, Warning, TEXT("AAgentSpawner::ResetAgentsd()"));
+	SetActorTickEnabled(false);
+
+	for (int32 i = 0; i < AgentBases.Num(); i++)
+	{
+		AgentBases[i]->SetUpAgent(false);
+	}
 }
 
 

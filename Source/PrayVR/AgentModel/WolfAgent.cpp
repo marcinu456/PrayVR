@@ -38,6 +38,8 @@ void AWolfAgent::Move()
 {
 	Super::Move();
 
+	float ConstantZ = GetActorLocation().Z;
+
 	// Wolfes
 
 
@@ -110,6 +112,10 @@ void AWolfAgent::Move()
 		}
 	}
 
+	SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, ConstantZ));
+
+
+
 	if (hp != 0) {
 		hp--;
 	}
@@ -151,7 +157,11 @@ void AWolfAgent::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Oth
 
 			const FVector Loc(GetActorLocation().X + FMath::RandRange(-50, 50), GetActorLocation().Y + FMath::RandRange(-50, 50), GetActorLocation().Z);
 			auto const SpawnedActorRef = GetWorld()->SpawnActor<AWolfAgent>(WolfActor, Loc, GetActorRotation());
-			SpawnedActorRef->hp = WOLF_MAX_HUNGRY_HP_LEVEL;
+			if (SpawnedActorRef)
+			{
+				SpawnedActorRef->hp = WOLF_MAX_HUNGRY_HP_LEVEL;
+				SpawnedActorRef->SetUpAgent(true);
+			}
 		}
 		atractorWolf = nullptr;
 	}
