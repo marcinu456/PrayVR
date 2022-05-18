@@ -25,4 +25,7 @@ public:
 private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* StaticMeshComponent;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Setup"))
+		int32 ButterflyChange = 1;
 };
