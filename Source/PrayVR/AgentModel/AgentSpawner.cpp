@@ -123,7 +123,7 @@ void AAgentSpawner::Tick(float DeltaTime)
 		ensure(Components.Num() > 0);
 
 		for (int i = 0; i < PLANT_REPRODUCE_COUNT; i++) {
-			const FVector Loc(Origin.X + FMath::RandRange(-50, 50), Origin.Y + FMath::RandRange(-50, 50), Origin.Z);
+			const FVector Loc(Origin.X + FMath::RandRange(-SizeOfSpawn/2, SizeOfSpawn/2), Origin.Y + FMath::RandRange(-SizeOfSpawn/2, SizeOfSpawn/2), Origin.Z);
 			APlantAgent* const SpawnedActorRef = GetWorld()->SpawnActor<APlantAgent>(PlantActor, Loc, GetActorRotation());
 			if (SpawnedActorRef)
 			{
@@ -150,7 +150,7 @@ void AAgentSpawner::Tick(float DeltaTime)
 		RabbitActor.GetDefaultObject()->GetComponents<UStaticMeshComponent>(Components);
 		ensure(Components.Num() > 0);
 		for (int i = 0; i < RABBIT_COUNT; i++) {
-			const FVector Loc(Origin.X + FMath::RandRange(-50, 50), Origin.Y + FMath::RandRange(-50, 50), Origin.Z);
+			const FVector Loc(Origin.X + FMath::RandRange(-SizeOfSpawn/2, SizeOfSpawn/2), Origin.Y + FMath::RandRange(-SizeOfSpawn/2, SizeOfSpawn/2), Origin.Z);
 			auto const SpawnedActorRef = GetWorld()->SpawnActor<ARabbitAgent>(RabbitActor, Loc, GetActorRotation());
 			if (SpawnedActorRef)
 			{
@@ -175,7 +175,7 @@ void AAgentSpawner::Tick(float DeltaTime)
 		WolfActor.GetDefaultObject()->GetComponents<UStaticMeshComponent>(Components);
 		ensure(Components.Num() > 0);
 		for (int i = 0; i < WOLF_COUNT; i++) {
-			const FVector Loc(Origin.X + FMath::RandRange(-50, 50), Origin.Y + FMath::RandRange(-50, 50), Origin.Z);
+			const FVector Loc(Origin.X + FMath::RandRange(-SizeOfSpawn/2, SizeOfSpawn/2), Origin.Y + FMath::RandRange(-SizeOfSpawn/2, SizeOfSpawn/2), Origin.Z);
 			auto const SpawnedActorRef = GetWorld()->SpawnActor<AWolfAgent>(WolfActor, Loc, GetActorRotation());
 			if (SpawnedActorRef)
 			{
@@ -192,7 +192,7 @@ void AAgentSpawner::Tick(float DeltaTime)
 
 	for(int32 i=0; i< AgentBases.Num();i++)
 	{
-		if(FVector::Dist(AgentBases[i]->GetActorLocation(), GetActorLocation())> SizeOfGrid)
+		if(FVector::Dist(AgentBases[i]->GetActorLocation(), GetActorLocation())> SizeOfSpawn)
 		{
 			AgentBases[i]->OnDestroy();
 			break;

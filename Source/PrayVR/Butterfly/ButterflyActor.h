@@ -27,5 +27,14 @@ private:
 		UStaticMeshComponent* StaticMeshComponent;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Setup"))
-		int32 ButterflyChange = 1;
+		float ButterflyChange = 0.002;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Setup"))
+		float sigma = 10;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Setup"))
+		float rho = 28;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Setup"))
+		float beta = 8/3;
 };

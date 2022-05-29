@@ -41,7 +41,7 @@ public:
 		virtual void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 
-	bool currentStatus = true;
+	//bool currentStatus = true;
 	int32 hp;
 
 	virtual void OnDestroy();

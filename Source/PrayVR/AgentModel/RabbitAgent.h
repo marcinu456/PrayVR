@@ -38,7 +38,7 @@ private:
 	const double RABBIT_REPRODUCE_COUNT = 2;
 
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Grid Setup"))
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Actor to spawn"))
 		TSubclassOf<ARabbitAgent> RabbitActor;
 
 	class APlantAgent* atractorPlant;

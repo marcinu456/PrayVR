@@ -25,12 +25,14 @@ void AButterflyActor::BeginPlay()
 void AButterflyActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	DeltaTime = 0.002;
+	DeltaTime = ButterflyChange;
 	auto position = GetActorLocation();
 
-	position.X = (position.X + 10.0 * (position.Y - position.X) * DeltaTime)* ButterflyChange;
-	position.Y = (position.Y + (-position.X * position.Z + 28.0 * position.X - position.Y) * DeltaTime)*ButterflyChange;
-	position.Z = (position.Z + (position.X * position.Y - (8.0 / 3.0) * position.Z) * DeltaTime)* ButterflyChange;
+	position.X = (position.X + sigma * (position.Y - position.X) * DeltaTime);
+	position.Y = (position.Y + (-position.X * position.Z + rho * position.X - position.Y) * DeltaTime);
+	position.Z = (position.Z + (position.X * position.Y - beta * position.Z) * DeltaTime);
+
+	position.X += 100;
 
 	SetActorLocation(position);
 }

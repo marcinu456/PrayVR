@@ -36,6 +36,6 @@ private:
 	const double WOLF_VELOCITY = 1.4;
 	const double WOLF_REPRODUCE_COUNT = 1;
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Grid Setup"))
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Actor to spawn"))
 		TSubclassOf<AWolfAgent> WolfActor;
 };

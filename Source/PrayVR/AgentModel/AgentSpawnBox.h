@@ -41,7 +41,7 @@ private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* StaticMeshComponent;
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Grid Setup"))
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Spawner Setup"))
 		TSubclassOf<class AAgentBase> AgentSpawnActor;
 
 	bool bTest = true;

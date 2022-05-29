@@ -30,11 +30,11 @@ public:
 private:
 
 	/** Class for cell. */
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Grid Setup"))
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Spawner Setup"))
 		TSubclassOf<APlantAgent> PlantActor;
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Grid Setup"))
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Spawner Setup"))
 		TSubclassOf<ARabbitAgent> RabbitActor;
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Grid Setup"))
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Spawner Setup"))
 		TSubclassOf<AWolfAgent> WolfActor;
 
 	const size_t PLANT_COUNT = 8;
@@ -60,8 +60,8 @@ private:
 
 	TArray<class AAgentBase*> AgentBases;
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Grid Setup"))
-		float SizeOfGrid = 100;
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Spawner Setup"))
+		float SizeOfSpawn = 100;
 
 	UPROPERTY(VisibleAnywhere)
 		USceneComponent* Root;
