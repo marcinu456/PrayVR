@@ -29,6 +29,7 @@ void AHandController_GameOfLife::TriggerPressed()
 		if (CastInterface)
 		{
 			CastInterface->Clicked();
+			//CastInterface->Update();
 		}
 	}
 

@@ -23,14 +23,31 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-private:
 
-	TArray<AButterflyActor*> ButterflyActors;
+
+	UPROPERTY(EditAnywhere)
+		TArray<AButterflyActor*> ButterflyActors;
+
 
 	/** Class for cell. */
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Grid Setup"))
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
 		TSubclassOf<AButterflyActor> ButterflyActor;
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Setup"))
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
 		int32 numberOfButterfly = 4;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
+		float ButterflyChange = 0.002;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
+		float sigma = 10;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
+		float rho = 28;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
+		float beta = 8 / 3;
+
+	UFUNCTION(BlueprintCallable)
+		FVector UpdatePosition(FVector Position);
 };

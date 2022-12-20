@@ -26,6 +26,9 @@ private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* StaticMeshComponent;
 
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+		TArray<UStaticMeshComponent*> StaticMeshComponents;
+
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Setup"))
 		float ButterflyChange = 0.002;
 
@@ -36,5 +39,11 @@ private:
 		float rho = 28;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Setup"))
-		float beta = 8/3;
+		float beta = 8 / 3;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Setup"))
+		bool bIsCPPTick = false;
+
+	UFUNCTION(BlueprintCallable)
+		FVector UpdatePosition(FVector Position);
 };

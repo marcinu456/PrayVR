@@ -19,21 +19,44 @@ void AButterflyActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	//StaticMeshComponent->SetWorldLocation(GetActorLocation());
+	//StaticMeshComponent->SetRelativeLocation(GetActorLocation());
+	for (int32 i = 0; i < 10; i++)
+	{
+		//auto StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ButterflyMesh"));
+		//StaticMeshComponent->SetupAttachment(RootComponent);
+		StaticMeshComponents.Add(StaticMeshComponent);
+	}
 }
 
 // Called every frame
 void AButterflyActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	DeltaTime = ButterflyChange;
-	auto position = GetActorLocation();
+	if(bIsCPPTick)
+	{
+		for(auto& StaticMesh : StaticMeshComponents)
+		{
+			auto pos = UpdatePosition(StaticMesh->GetRelativeLocation());
+			StaticMesh->SetRelativeLocation(pos);
+		}
+		//auto position = GetActorLocation();
+		//auto position = StaticMeshComponent->GetComponentToWorld().GetLocation();
 
-	position.X = (position.X + sigma * (position.Y - position.X) * DeltaTime);
-	position.Y = (position.Y + (-position.X * position.Z + rho * position.X - position.Y) * DeltaTime);
-	position.Z = (position.Z + (position.X * position.Y - beta * position.Z) * DeltaTime);
-
-	position.X += 100;
-
-	SetActorLocation(position);
+		//SetActorLocation(UpdatePosition(position));
+		//StaticMeshComponent->SetWorldLocation(position);
+	}
 }
 
+FVector AButterflyActor::UpdatePosition(FVector position)
+{
+	float LocalDeltaTime = ButterflyChange;
+
+
+	position.X = (position.X + sigma * (position.Y - position.X) * LocalDeltaTime);
+	position.Y = (position.Y + (-position.X * position.Z + rho * position.X - position.Y) * LocalDeltaTime);
+	position.Z = (position.Z + (position.X * position.Y - beta * position.Z) * LocalDeltaTime);
+
+	return position;
+	
+}
