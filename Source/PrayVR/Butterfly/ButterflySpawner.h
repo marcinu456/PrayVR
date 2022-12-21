@@ -25,27 +25,27 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 
-	UPROPERTY(EditAnywhere)
-		TArray<AButterflyActor*> ButterflyActors;
+	//UPROPERTY(EditAnywhere)
+	//	TArray<AButterflyActor*> ButterflyActors;
 
 
 	/** Class for cell. */
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
-		TSubclassOf<AButterflyActor> ButterflyActor;
+	//UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
+	//	TSubclassOf<AButterflyActor> ButterflyActor;
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
 		int32 numberOfButterfly = 4;
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
 		float ButterflyChange = 0.002;
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
 		float sigma = 10;
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
 		float rho = 28;
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
 		float beta = 8 / 3;
 
 	UFUNCTION(BlueprintCallable)
