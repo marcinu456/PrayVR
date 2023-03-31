@@ -37,7 +37,7 @@ public:
 		int32 numberOfButterfly = 4;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
-		float ButterflyChange = 0.002;
+		float ButterflyDeltaTime = 0.002;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
 		float sigma = 10;
