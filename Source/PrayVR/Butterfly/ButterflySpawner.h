@@ -6,6 +6,22 @@
 #include "GameFramework/Actor.h"
 #include "ButterflySpawner.generated.h"
 
+USTRUCT(BlueprintType)
+struct FButterflySetup
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
+	float sigma = 10;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
+	float rho = 28;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
+	float beta = 8 / 3;
+};
+
+
 class AButterflyActor;
 UCLASS()
 class PRAYVR_API AButterflySpawner : public AActor
@@ -40,14 +56,10 @@ public:
 		float ButterflyDeltaTime = 0.002;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
-		float sigma = 10;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
-		float rho = 28;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
-		float beta = 8 / 3;
-
+		TArray<FButterflySetup> ButterflySetupArray;
+	
 	UFUNCTION(BlueprintCallable)
-		FVector UpdatePosition(FVector Position);
+		FVector UpdatePosition(FButterflySetup ButterflySetup, FVector Position);
 };
+
+

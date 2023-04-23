@@ -39,14 +39,14 @@ void AButterflySpawner::Tick(float DeltaTime)
 
 }
 
-FVector AButterflySpawner::UpdatePosition(FVector position)
+FVector AButterflySpawner::UpdatePosition(FButterflySetup ButterflySetup, FVector position)
 {
 	float LocalDeltaTime = ButterflyDeltaTime;
 
 
-	position.X = (position.X + sigma * (position.Y - position.X) * LocalDeltaTime);
-	position.Y = (position.Y + (-position.X * position.Z + rho * position.X - position.Y) * LocalDeltaTime);
-	position.Z = (position.Z + (position.X * position.Y - beta * position.Z) * LocalDeltaTime);
+	position.X = (position.X + ButterflySetup.sigma * (position.Y - position.X) * LocalDeltaTime);
+	position.Y = (position.Y + (-position.X * position.Z + ButterflySetup.rho * position.X - position.Y) * LocalDeltaTime);
+	position.Z = (position.Z + (position.X * position.Y - ButterflySetup.beta * position.Z) * LocalDeltaTime);
 
 	return position;
 
