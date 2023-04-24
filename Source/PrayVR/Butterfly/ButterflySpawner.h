@@ -19,6 +19,9 @@ struct FButterflySetup
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
 	float beta = 8 / 3;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true", Category = "ButterflySetup"))
+	FLinearColor ButterflyColor;
 };
 
 
