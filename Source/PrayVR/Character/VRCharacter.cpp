@@ -78,7 +78,7 @@ void AVRCharacter::BeginPlay()
 
 	DestinationMarker->SetVisibility(false);
 
-	if (BlinkerMaterialBase)
+	if (BlinkerMaterialBase && bUseBlinkers)
 	{
 		BlinkerMaterialInstance = UMaterialInstanceDynamic::Create(BlinkerMaterialBase, this);
 		PostProcessComponent->AddOrUpdateBlendable(BlinkerMaterialInstance);
@@ -122,7 +122,10 @@ void AVRCharacter::Tick(float DeltaTime)
 	{
 		UpdateDestinationMarker();
 	}
-	UpdateBlinkers();
+	if(bUseBlinkers)
+	{
+		UpdateBlinkers();
+	}
 	auto location = GetActorLocation();
 	if(location.Z<-100)
 	{

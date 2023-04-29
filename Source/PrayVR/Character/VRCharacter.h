@@ -139,6 +139,9 @@ private: // Configuration Parameters
 
 
 	bool bStarTeleport = false;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	bool bUseBlinkers = true;
 
 	FVector StartLocation;
 

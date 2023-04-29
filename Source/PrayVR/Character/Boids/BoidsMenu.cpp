@@ -101,5 +101,5 @@ void UBoidsMenu::TargetSliderValueChanged(float value)
 
 void UBoidsMenu::BackToPreviousLevel()
 {
-	UGameplayStatics::OpenLevel(GetWorld(), "Level0");
+	UGameplayStatics::OpenLevel(GetWorld(), "GalleryRoomBoids");
 }
