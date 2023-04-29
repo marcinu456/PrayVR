@@ -73,7 +73,7 @@ int32 AGridActor3D::CountAliveNeighbors(const int32 i, const int32 j, const int3
 	return NumAliveNeighbors;
 }
 
-//TODO wszystko to do vr i dodaj tam player controler do testów
+//TODO wszystko to do vr i dodaj tam player controler do testï¿½w
 //TODO change rules http://cs.brown.edu/courses/cs195v/projects/life/edwallac/index.html
 //TODO change visibility
 void AGridActor3D::UpdateAliveNext(const int32 i, const int32 j, const int32 k, const int32 NumAliveNeighbors) {
@@ -140,13 +140,13 @@ void AGridActor3D::ToPlayMode() {
 	for (int i = 0; i < Height; i++) {
 		for (int j = 0; j < Width; j++) {
 			for (int k = 0; k < Deep; k++) {
-				const bool IsAlive = CellActors3D[i][j][k]->GetAlive();
-				if (IsAlive) {
-					CellActors3D[i][j][k]->SetActorHiddenInGame(false);
-				}
-				else {
-					CellActors3D[i][j][k]->SetActorHiddenInGame(true);
-				}
+				//const bool IsAlive = CellActors3D[i][j][k]->GetAlive();
+				//if (IsAlive) {
+				//	CellActors3D[i][j][k]->SetActorHiddenInGame(false);
+				//}
+				//else {
+				//	CellActors3D[i][j][k]->SetActorHiddenInGame(true);
+				//}
 			}
 		}
 	}

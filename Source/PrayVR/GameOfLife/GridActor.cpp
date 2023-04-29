@@ -150,7 +150,7 @@ void AGridActor::ToPlayMode() {
 	for (int i = 0; i < Height; i++) {
 		for (int j = 0; j < Width; j++) {
 			int Index = j + i * Width;
-			const bool IsAlive = CellActors[Index]->GetAlive();
+			//const bool IsAlive = CellActors[Index]->GetAlive();
 			/*if (IsAlive) {
 				CellActors[Index]->SetActorHiddenInGame(false);
 			}
