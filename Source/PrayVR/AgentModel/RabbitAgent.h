@@ -15,16 +15,7 @@ class PRAYVR_API ARabbitAgent : public AAgentBase
 	GENERATED_BODY()
 public:
 	ARabbitAgent();
-
-	//void SetBasicMaterial() override;
-	//
-	//void SetBeginMaterial() override;
-	//
-	//void SetClickedMaterial() override;
-
 protected:
-	//virtual void BeginPlay() override;
-
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -36,19 +27,15 @@ private:
 	const size_t RABBIT_MAX_HUNGRY_HP_LEVEL = 150;
 	const double RABBIT_VELOCITY = 2.5;
 	const double RABBIT_REPRODUCE_COUNT = 2;
-
-
+	
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = "Actor to spawn"))
 		TSubclassOf<ARabbitAgent> RabbitActor;
 
 	class APlantAgent* atractorPlant;
 	ARabbitAgent* atractorRabbit;
-
-
-	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
+	
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
 
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
-
-
-	
 };
