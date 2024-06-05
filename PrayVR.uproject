@@ -34,7 +34,12 @@
 		},
 		{
 			"Name": "rts_camera",
-			"Enabled": true
+			"Enabled": false
+		},
+		{
+			"Name": "UniversalCameraPlugin",
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/a9172fdfc87c464eae3a49860ee2610f"
 		}
 	]
 }
