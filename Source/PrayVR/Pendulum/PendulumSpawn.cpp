@@ -64,7 +64,7 @@ void APendulumSpawn::DeletePendulum()
 		CurrentNumberOfPendulum--;
 		auto SpawnedActorRef = PendulumActors.Pop();
 		SpawnedActorRef->Destroy();
-		UE_LOG(LogTemp, Warning, TEXT("Some warning DeletePendulum %f"), PendulumActors.Num());
+		//UE_LOG(LogTemp, Warning, TEXT("Some warning DeletePendulum %f"), PendulumActors.Num());
 
 	}
 }

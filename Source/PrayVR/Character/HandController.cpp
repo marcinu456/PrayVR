@@ -15,7 +15,8 @@ AHandController::AHandController()
 
 	MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("MotionController"));
 	SetRootComponent(MotionController);
-	MotionController->bDisplayDeviceModel = true;
+
+	//MotionController->bDisplayDeviceModel = true;
 	MotionController->SetCollisionProfileName("OverlapAllDynamic");
 
 	Pointer = CreateDefaultSubobject<UWidgetInteractionComponent>(TEXT("Pointer"));

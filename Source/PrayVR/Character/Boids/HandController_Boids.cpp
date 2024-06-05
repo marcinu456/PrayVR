@@ -109,7 +109,7 @@ void AHandController_Boids::MoveTarget()
 
 	
 
-	UE_LOG(LogTemp, Warning, TEXT("AHandController_Boids::MoveTarget %f"), TargetPos);
+	//UE_LOG(LogTemp, Warning, TEXT("AHandController_Boids::MoveTarget %f"), TargetPos);
 
 	//TODO zamiast actora zrób kompent tutaj i do niego niech ci¹gn¹ te boidsy
 

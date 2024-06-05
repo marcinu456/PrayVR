@@ -61,7 +61,7 @@ void AVRCharacter::BeginPlay()
 	{
 		// Epic Comment :D // Windows (Oculus / Vive)
 
-		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Floor);
+//		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::LocalFloor);
 		UE_LOG(LogTemp, Warning, TEXT("Some warning OculusHMD"));
 
 		//FQuat hmdRotation;
@@ -344,15 +344,15 @@ void AVRCharacter::Rotation(float Rotate)
 {
 	auto RotOrigin = Camera->GetRelativeRotation();
 	auto RotOriginActor = GetActorRotation();
-	UE_LOG(LogTemp, Warning, TEXT("Before warning Rotation %f"), RotOrigin.Yaw);
+	//UE_LOG(LogTemp, Warning, TEXT("Before warning Rotation %f"), RotOrigin.Yaw);
 
 	RotOrigin.Yaw += Rotate;
 	RotOriginActor.Yaw += Rotate;
-	UE_LOG(LogTemp, Warning, TEXT("Middle warning Rotation %f"), RotOrigin.Yaw);
+	//UE_LOG(LogTemp, Warning, TEXT("Middle warning Rotation %f"), RotOrigin.Yaw);
 	SetActorRelativeRotation(RotOriginActor);
 	Camera->SetRelativeRotation(RotOrigin);
 	Camera->SetWorldRotation(RotOrigin);
-	UE_LOG(LogTemp, Warning, TEXT("After warning Rotation %f"), RotOrigin.Yaw);
+	//UE_LOG(LogTemp, Warning, TEXT("After warning Rotation %f"), RotOrigin.Yaw);
 
 	//APlayerController* PC = Cast<APlayerController>(GetController());
 	//PC->Get

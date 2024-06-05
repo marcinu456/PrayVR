@@ -38,11 +38,11 @@ void ABoidManager::Tick(float DeltaTime) {
 
 void ABoidManager::AddManagedBoid(ABoid* Boid) {
 	ManagedBoids.AddUnique(Boid);
-	UE_LOG(LogTemp, Log, TEXT("Start managing %s"), *Boid->GetName());
+	//UE_LOG(LogTemp, Log, TEXT("Start managing %s"), *Boid->GetName());
 }
 
 void ABoidManager::RemoveManagedBoid(ABoid* Boid) {
 	ManagedBoids.Remove(Boid);
-	UE_LOG(LogTemp, Log, TEXT("Stop managing %s"), *Boid->GetName());
+	//UE_LOG(LogTemp, Log, TEXT("Stop managing %s"), *Boid->GetName());
 }
 

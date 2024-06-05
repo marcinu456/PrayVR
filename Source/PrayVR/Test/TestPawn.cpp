@@ -47,7 +47,7 @@ void ATestPawn::SpeedUp()
 			MyGameState->ClearTimers();
 			MyGameState->StartTimers();
 		}
-		UE_LOG(LogTemp, Warning, TEXT("speed up, time: %f"), MyGameState->GetAdvanceTime());
+		//UE_LOG(LogTemp, Warning, TEXT("speed up, time: %f"), MyGameState->GetAdvanceTime());
 	}
 }
 
@@ -61,7 +61,7 @@ void ATestPawn::SlowDown()
 			MyGameState->ClearTimers();
 			MyGameState->StartTimers();
 		}
-		UE_LOG(LogTemp, Warning, TEXT("slow down, time: %f"), MyGameState->GetAdvanceTime());
+		//UE_LOG(LogTemp, Warning, TEXT("slow down, time: %f"), MyGameState->GetAdvanceTime());
 	}
 }
 

@@ -203,8 +203,8 @@ void AAgentSpawner::Tick(float DeltaTime)
 
 void AAgentSpawner::RespondToOnPlayerJump(float location)
 {
-	UE_LOG(LogTemp, Warning, TEXT("AAgentSpawner::WhenPlayerJump %f"),location);
-
+	//UE_LOG(LogTemp, Warning, TEXT("AAgentSpawner::WhenPlayerJump %f"),location);
+	return;
 }
 
 void AAgentSpawner::AddAgent(AAgentBase* _Agent)
@@ -224,14 +224,14 @@ void AAgentSpawner::AddAgent(AAgentBase* _Agent)
 	//{
 	//	UE_LOG(LogTemp, Warning, TEXT("CastAsRabbit"));
 	//}
-	UE_LOG(LogTemp, Warning, TEXT("numberofagents %d"), AgentBases.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("numberofagents %d"), AgentBases.Num());
 }
 
 void AAgentSpawner::DeleteAgent(AAgentBase* _Agent)
 {
 	AgentBases.Remove(_Agent);
 
-	UE_LOG(LogTemp, Warning, TEXT("numberofagents %d"), AgentBases.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("numberofagents %d"), AgentBases.Num());
 }
 
 void AAgentSpawner::StartAgents()

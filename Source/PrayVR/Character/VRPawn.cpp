@@ -47,10 +47,10 @@ void AVRPawn::BeginPlay()
 	if (DeviceName == "SteamVR" || DeviceName == "OculusHMD")
 	{
 		// Epic Comment :D // Windows (Oculus / Vive)
-		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Floor);
+//		UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::LocalFloor);
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Some warning message %s"), *DeviceName.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("Some warning message %s"), *DeviceName.ToString());
 
 	TargetDestinationMarker-> SetVisibility(false);
 

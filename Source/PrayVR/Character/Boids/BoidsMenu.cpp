@@ -75,7 +75,7 @@ void UBoidsMenu::FollowTargetButtonClicked()
 		FollowTargetText->SetText(FText::FromString("✔"));
 		ParentBoidsManager->SetBoidsFollowTarget(true);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("FollowTargetButtonClicked %d "), ParentBoidsManager->IsBoidsFollowTarget());
+	//UE_LOG(LogTemp, Warning, TEXT("FollowTargetButtonClicked %d "), ParentBoidsManager->IsBoidsFollowTarget());
 
 }
 
