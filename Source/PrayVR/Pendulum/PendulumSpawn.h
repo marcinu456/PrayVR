@@ -37,8 +37,8 @@ private:
 	UPROPERTY(VisibleAnywhere)
 		USceneComponent* Root;
 
-	UPROPERTY(VisibleAnywhere)
-		UWidgetComponent* ControlBar;
+	//UPROPERTY(VisibleAnywhere)
+	//	UWidgetComponent* ControlBar;
 
 	UPROPERTY()
 	TArray<APendulum*> PendulumActors; //row-major

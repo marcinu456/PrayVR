@@ -13,8 +13,8 @@ APendulumSpawn::APendulumSpawn()
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	SetRootComponent(Root);
 
-	ControlBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("ControlBar"));
-	ControlBar->SetupAttachment(GetRootComponent());
+	//ControlBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("ControlBar"));
+	//ControlBar->SetupAttachment(GetRootComponent());
 
 	CurrentNumberOfPendulum = 0;
 	MaxNumberOfPendulum = 50;
@@ -25,11 +25,11 @@ void APendulumSpawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	auto PaintingActionBar = Cast<UPendulumControl>(ControlBar->GetUserWidgetObject());
-	if (PaintingActionBar)
-	{
-		PaintingActionBar->SetParentPicker(this);
-	}
+	//auto PaintingActionBar = Cast<UPendulumControl>(ControlBar->GetUserWidgetObject());
+	//if (PaintingActionBar)
+	//{
+	//	PaintingActionBar->SetParentPicker(this);
+	//}
 
 
 }

@@ -152,8 +152,7 @@ void APendulum::computePosition()
 
 	FirstColumn->UpdateSpline();
 
-	int32 SegmentNum = Path.Num() - 1;
-	for (int32 i = 0; i < SegmentNum; ++i)
+	for (int32 i = 0; i < Path.Num() - 1; ++i)
 	{
 		if (ColumnsPathMeshPool.Num() <= i)
 		{
@@ -165,6 +164,8 @@ void APendulum::computePosition()
 			SplineMesh->RegisterComponent();
 
 			ColumnsPathMeshPool.Add(SplineMesh);
+
+			UE_LOG(LogTemp, Warning, TEXT("Some warning ColumnsPathMeshPool"));
 		}
 
 		USplineMeshComponent* SplineMesh = ColumnsPathMeshPool[i];
@@ -177,15 +178,7 @@ void APendulum::computePosition()
 		SplineMesh->SetStartAndEnd(StarPos, Tangent, EndPos, Tangent);
 
 	}
-
-
-
-	//USplineMeshComponent* SplineMesh = ColumnsPathMeshPool[1];
-	//auto ss1 = SplineMesh->GetStartPosition();
-	//auto ss2 = SplineMesh->GetEndPosition();
-	//UE_LOG(LogTemp, Warning, TEXT("Text, %f, %f, end %f, %f"), ss1.X, ss1.Y, ss2.X, ss2.Y);
-
-
+	//TODO fix the bug with non visible spline mesh
 }
 
 

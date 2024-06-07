@@ -19,6 +19,7 @@ class PRAYVR_API UPendulumControl : public UUserWidget
 public:
 	bool Initialize() override;
 
+	UFUNCTION(BlueprintCallable)
 	void SetParentPicker(APendulumSpawn* _ParentPicker) { ParentPicker = _ParentPicker; }
 
 protected:

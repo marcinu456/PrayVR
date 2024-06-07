@@ -85,19 +85,10 @@ private:
 	UPROPERTY(VisibleAnywhere)
 		class USplineComponent* FirstColumn;
 
-	//UPROPERTY()
-	//	TArray<class USplineMeshComponent*> FirstSplineColumn;
-
 	UPROPERTY(EditDefaultsOnly)
 		class UStaticMesh* FirstColumnArchMesh;
 
 	UPROPERTY(EditDefaultsOnly)
 		class UMaterialInterface* FirstColumnArchMaterial;
-
-	//UPROPERTY(EditDefaultsOnly)
-	//	class UStaticMesh* SecondColumnArchMesh;
-
-	//UPROPERTY(EditDefaultsOnly)
-	//	class UMaterialInterface* SecondColumnArchMaterial;
 
 };
