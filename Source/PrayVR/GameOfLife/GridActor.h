@@ -21,17 +21,17 @@ public:
 	 * Updates the visibility of the cells for edit mode.
 	 * All cells are set to be visible.
 	 */
-	void ToEditMode();
+	virtual void ToEditMode();
 
 	/**
 	 * Updates the visibility of the cells for play mode.
 	 * Dead cells are set to be invisible and alive cells are set to be visible.
 	 */
-	void ToPlayMode();
+	virtual void ToPlayMode();
 
 	void StartTimer();
 	void ClearTimer();
-	void Reset();
+	virtual void Reset();
 
 	float AddTime();
 	float DeleteTime();
@@ -45,7 +45,7 @@ public:
 
 
 
-private:
+protected:
 	/**
 	 * Advances the grid to the next generation.
 	 */
@@ -54,6 +54,7 @@ private:
 
 	bool bISAdavance = false;
 
+private:
 	/**
 	* Counts the number of alive neighbors for the cell at index j + i * width.
 	*/
@@ -64,15 +65,16 @@ private:
 	*/
 	void UpdateAliveNext(const int Index, const int NumAliveNeighbors);
 
+protected:
 	/**
 	* Populates the AliveNext field of all the cells in the grid to be able to advance to the next generation.
 	*/
-	void GenerateNext();
+	virtual void GenerateNext();
 
 	/**
 	* Updates the visibility and Alive field of the cells in the grid.
 	*/
-	void UpdateNext();
+	virtual void UpdateNext();
 
 
 	TArray<ACellActor*> CellActors; //row-major

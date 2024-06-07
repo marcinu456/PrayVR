@@ -19,6 +19,7 @@ class PRAYVR_API UGameOfLifeControll : public UUserWidget
 public:
 	bool Initialize() override;
 
+	UFUNCTION(BlueprintCallable)
 	void SetParentPicker(AGridActor* _ParentPicker) { ParentPicker = _ParentPicker; }
 
 protected:

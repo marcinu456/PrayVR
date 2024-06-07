@@ -7,6 +7,16 @@
 #include "Kismet/GameplayStatics.h"
 #include "PrayVR/Test/TestGameState.h"
 
+AGridActor3D::AGridActor3D()
+{
+	PrimaryActorTick.bCanEverTick = true;
+
+	AdvanceTime = 1.5f;
+	maxTimer = 5.f;
+	minTimer = 0.1f;
+}
+
+
 void AGridActor3D::BeginPlay()
 {
 	Super::BeginPlay();
@@ -50,6 +60,7 @@ void AGridActor3D::BeginPlay()
 		}
 		CellActors3D.push_back(v2d);
 	}
+
 }
 
 int32 AGridActor3D::CountAliveNeighbors(const int32 i, const int32 j, const int32 k) {
@@ -120,12 +131,6 @@ void AGridActor3D::UpdateNext() {
 	}
 }
 
-void AGridActor3D::Advance() {
-	UE_LOG(LogTemp, Warning, TEXT("advancing"));
-	GenerateNext();
-	UpdateNext();
-}
-
 void AGridActor3D::ToEditMode() {
 	for (int i = 0; i < Height; i++) {
 		for (int j = 0; j < Width; j++) {
@@ -152,16 +157,6 @@ void AGridActor3D::ToPlayMode() {
 	}
 }
 
-void AGridActor3D::StartTimer() {
-	ATestGameState* const MyGameState = Cast<ATestGameState>(UGameplayStatics::GetGameState(GetWorld()));
-	const float AdvanceTime = MyGameState->GetAdvanceTime();
-	FTimerHandle AdvanceTimer;
-	GetWorld()->GetTimerManager().SetTimer(AdvanceTimer, this, &AGridActor3D::Advance, AdvanceTime, true);
-}
-
-void AGridActor3D::ClearTimer() {
-	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
-}
 
 void AGridActor3D::Reset() {
 	for (int i = 0; i < Height; i++) {
@@ -190,4 +185,5 @@ void AGridActor3D::RandomGrid()
 		}
 	}
 }
+
 
