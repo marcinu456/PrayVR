@@ -40,20 +40,11 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-
-
-protected:
 	/**
 	 * Advances the grid to the next generation.
 	 */
 	UFUNCTION() //set because called by timers
 		void Advance();
-
-	bool bISAdavance = false;
 
 private:
 	/**
@@ -104,4 +95,6 @@ protected:
 
 	float maxTimer;
 	float minTimer;
+
+	FTimerHandle GridTimer;
 };

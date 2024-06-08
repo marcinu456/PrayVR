@@ -17,8 +17,8 @@ AGridActor::AGridActor()
 	ControlBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("ControlBar"));
 	ControlBar->SetupAttachment(GetRootComponent());
 
-	AdvanceTime = 1.5f;
-	maxTimer = 5.f;
+	AdvanceTime = .5f;
+	maxTimer = 8.f;
 	minTimer = 0.1f;
 
 }
@@ -59,17 +59,8 @@ void AGridActor::BeginPlay()
 	}
 }
 
-void AGridActor::Tick(float DeltaTime)
+int AGridActor::CountAliveNeighbors(const int i, const int j) 
 {
-	Super::Tick(DeltaTime);
-
-	if(bISAdavance)
-	{
-		StartTimer();
-	}
-}
-
-int AGridActor::CountAliveNeighbors(const int i, const int j) {
 	int NumAliveNeighbors = 0;
 	for (int k = -1; k <= 1; k++) {
 		for (int l = -1; l <= 1; l++) {
@@ -87,7 +78,8 @@ int AGridActor::CountAliveNeighbors(const int i, const int j) {
 	return NumAliveNeighbors;
 }
 
-void AGridActor::UpdateAliveNext(const int Index, const int NumAliveNeighbors) {
+void AGridActor::UpdateAliveNext(const int Index, const int NumAliveNeighbors) 
+{
 	const bool IsAlive = CellActors[Index]->GetAlive();
 	if (IsAlive && (NumAliveNeighbors < 2))
 	{
@@ -110,7 +102,8 @@ void AGridActor::UpdateAliveNext(const int Index, const int NumAliveNeighbors) {
 	}
 }
 
-void AGridActor::GenerateNext() {
+void AGridActor::GenerateNext()
+{
 	for (int i = 0; i < Height; i++) {
 		for (int j = 0; j < Width; j++) {
 			const int NumAliveNeighbors = CountAliveNeighbors(i, j);
@@ -119,7 +112,8 @@ void AGridActor::GenerateNext() {
 	}
 }
 
-void AGridActor::UpdateNext() {
+void AGridActor::UpdateNext() 
+{
 	for (int i = 0; i < Height; i++) {
 		for (int j = 0; j < Width; j++) {
 			const int Index = j + i * Width;
@@ -128,25 +122,28 @@ void AGridActor::UpdateNext() {
 	}
 }
 
-void AGridActor::Advance() {
+void AGridActor::Advance() 
+{
 	UE_LOG(LogTemp, Warning, TEXT("advancing"));
 	GenerateNext();
 	UpdateNext();
 }
 
 
-void AGridActor::ToEditMode() {
+void AGridActor::ToEditMode()
+{
 	for (int i = 0; i < Height; i++) {
 		for (int j = 0; j < Width; j++) {
 			const int Index = j + i * Width;
 			CellActors[Index]->SetActorHiddenInGame(false);
 		}
 	}
-	bISAdavance = false;
+	ClearTimer();
 
 }
 
-void AGridActor::ToPlayMode() {
+void AGridActor::ToPlayMode() 
+{
 	for (int i = 0; i < Height; i++) {
 		for (int j = 0; j < Width; j++) {
 			int Index = j + i * Width;
@@ -159,25 +156,27 @@ void AGridActor::ToPlayMode() {
 			}*/
 		}
 	}
-	bISAdavance = true;
+	StartTimer();
 }
 
-void AGridActor::StartTimer() {
+void AGridActor::StartTimer() 
+{
+	UE_LOG(LogTemp, Warning, TEXT("StartTimer"));
 
-	FTimerHandle AdvanceTimer;
-	GetWorld()->GetTimerManager().SetTimer(AdvanceTimer, this, &AGridActor::Advance, AdvanceTime, true);
+	GetWorld()->GetTimerManager().SetTimer(GridTimer, this, &AGridActor::Advance, AdvanceTime, true);
 }
 
 void AGridActor::ClearTimer() {
-	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+	GetWorld()->GetTimerManager().ClearTimer(GridTimer);
 }
 
-void AGridActor::Reset() {
+void AGridActor::Reset() 
+{
+	ClearTimer();
 	for (int i = 0; i < Height; i++) {
 		for (int j = 0; j < Width; j++) {
 			const int Index = j + i * Width;
 			CellActors[Index]->Reset();
-			ClearTimer();
 		}
 	}
 }
@@ -199,7 +198,7 @@ void AGridActor::RandomGrid()
 float AGridActor::AddTime()
 {
 	if (AdvanceTime >= minTimer && AdvanceTime < maxTimer) {
-		AdvanceTime -= 0.1f;
+		AdvanceTime += 0.1f;
 	}
 	return AdvanceTime;
 }
@@ -207,9 +206,10 @@ float AGridActor::AddTime()
 float AGridActor::DeleteTime()
 {
 	if (AdvanceTime > minTimer && AdvanceTime <= maxTimer) {
-		AdvanceTime += 0.1f;
+		AdvanceTime -= 0.1f;
 	}
 	return AdvanceTime;
 
 }
+
 

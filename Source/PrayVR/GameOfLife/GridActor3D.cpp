@@ -63,7 +63,8 @@ void AGridActor3D::BeginPlay()
 
 }
 
-int32 AGridActor3D::CountAliveNeighbors(const int32 i, const int32 j, const int32 k) {
+int32 AGridActor3D::CountAliveNeighbors(const int32 i, const int32 j, const int32 k) 
+{
 	int32 NumAliveNeighbors = 0;
 	for (int x = -1; x <= 1; x++) {
 		for (int y = -1; y <= 1; y++) {
@@ -87,7 +88,8 @@ int32 AGridActor3D::CountAliveNeighbors(const int32 i, const int32 j, const int3
 //TODO wszystko to do vr i dodaj tam player controler do test�w
 //TODO change rules http://cs.brown.edu/courses/cs195v/projects/life/edwallac/index.html
 //TODO change visibility
-void AGridActor3D::UpdateAliveNext(const int32 i, const int32 j, const int32 k, const int32 NumAliveNeighbors) {
+void AGridActor3D::UpdateAliveNext(const int32 i, const int32 j, const int32 k, const int32 NumAliveNeighbors) 
+{
 	const bool IsAlive = CellActors3D[i][j][k]->GetAlive();
 	if (IsAlive && (NumAliveNeighbors < 2))
 	{
@@ -110,7 +112,8 @@ void AGridActor3D::UpdateAliveNext(const int32 i, const int32 j, const int32 k, 
 	}
 }
 
-void AGridActor3D::GenerateNext() {
+void AGridActor3D::GenerateNext() 
+{
 	for (int i = 0; i < Height; i++) {
 		for (int j = 0; j < Width; j++) {
 			for (int k = 0; k < Deep; k++) {
@@ -121,7 +124,8 @@ void AGridActor3D::GenerateNext() {
 	}
 }
 
-void AGridActor3D::UpdateNext() {
+void AGridActor3D::UpdateNext() 
+{
 	for (int i = 0; i < Height; i++) {
 		for (int j = 0; j < Width; j++) {
 			for (int k = 0; k < Deep; k++) {
@@ -131,7 +135,8 @@ void AGridActor3D::UpdateNext() {
 	}
 }
 
-void AGridActor3D::ToEditMode() {
+void AGridActor3D::ToEditMode() 
+{
 	for (int i = 0; i < Height; i++) {
 		for (int j = 0; j < Width; j++) {
 			for (int k = 0; k < Deep; k++) {
@@ -139,9 +144,11 @@ void AGridActor3D::ToEditMode() {
 			}
 		}
 	}
+	ClearTimer();
 }
 
-void AGridActor3D::ToPlayMode() {
+void AGridActor3D::ToPlayMode() 
+{
 	for (int i = 0; i < Height; i++) {
 		for (int j = 0; j < Width; j++) {
 			for (int k = 0; k < Deep; k++) {
@@ -155,15 +162,17 @@ void AGridActor3D::ToPlayMode() {
 			}
 		}
 	}
+	StartTimer();
 }
 
 
-void AGridActor3D::Reset() {
+void AGridActor3D::Reset() 
+{
+	ClearTimer();
 	for (int i = 0; i < Height; i++) {
 		for (int j = 0; j < Width; j++) {
 			for (int k = 0; k < Deep; k++) {
 				CellActors3D[i][j][k]->Reset();
-				ClearTimer();
 			}
 		}
 	}
