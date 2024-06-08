@@ -44,6 +44,7 @@ void ACellActor::Clicked()
 			StaticMeshComponent->SetMaterial(0, ClickedMaterial);
 			Alive = true;
 		}
+		UE_LOG(LogTemp, Warning, TEXT("Cell Clicked"));
 	//}
 }
 
