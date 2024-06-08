@@ -182,6 +182,20 @@ void AGridActor::Reset() {
 	}
 }
 
+void AGridActor::RandomGrid()
+{
+	for (int i = 0; i < Height; i++) {
+		for (int j = 0; j < Width; j++) {
+			const int Index = j + i * Width;
+			if (FMath::RandRange(0.0f, 1.0f) < 0.2f)
+			{
+				CellActors[Index]->SetAlive(true);
+				CellActors[Index]->Random();
+			}
+		}
+	}
+}
+
 float AGridActor::AddTime()
 {
 	if (AdvanceTime >= minTimer && AdvanceTime < maxTimer) {

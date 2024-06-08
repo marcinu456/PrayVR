@@ -22,5 +22,8 @@ bool UGameOfLifeControll::Initialize()
 	ResetButton->OnClicked.AddDynamic(this, &UGameOfLifeControll::ResetButtonClicked);
 	ResetButton->SetIsEnabled(false);
 
+	if (!RandomButton) return false;
+	RandomButton->OnClicked.AddDynamic(this, &UGameOfLifeControll::RandomButtonClicked);
+
 	return true;
 }

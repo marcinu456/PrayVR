@@ -53,7 +53,7 @@ public:
 
 	virtual void Reset() override;
 
-	void RandomGrid();
+	virtual void RandomGrid() override;
 
 protected:
 	virtual void BeginPlay() override;

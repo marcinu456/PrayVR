@@ -32,6 +32,7 @@ public:
 	void StartTimer();
 	void ClearTimer();
 	virtual void Reset();
+	virtual void RandomGrid();
 
 	float AddTime();
 	float DeleteTime();

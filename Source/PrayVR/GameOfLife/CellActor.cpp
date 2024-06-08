@@ -13,6 +13,7 @@ ACellActor::ACellActor()
 	StaticMeshComponent->SetupAttachment(RootComponent);
 	StaticMeshComponent->SetMobility(EComponentMobility::Static);
 
+	//Delegate for binding UFunction
 	FScriptDelegate OnClickedDelegate;
 	FScriptDelegate OnBeginCursorOverDelegate;
 	FScriptDelegate OnEndCursorOverDelegate;

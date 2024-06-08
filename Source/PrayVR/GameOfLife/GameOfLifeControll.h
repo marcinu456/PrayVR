@@ -24,23 +24,26 @@ public:
 
 protected:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (BindWidget))
-		UButton* SpeedUpButton;
+	UButton* SpeedUpButton;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (BindWidget))
-		UButton* SlowDownButton;
+	UButton* SlowDownButton;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (BindWidget))
-		UButton* StartButton;
+	UButton* StartButton;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (BindWidget))
-		UButton* ResetButton;
+	UButton* ResetButton;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (BindWidget))
-		UEditableTextBox* NumberOfPendulum;
+	UButton* RandomButton;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (BindWidget))
+	UEditableTextBox* NumberOfPendulum;
 
 private:
 	UFUNCTION()
-		void SpeedUpButtonClicked()
+	void SpeedUpButtonClicked()
 	{
 		if (ParentPicker)
 		{
@@ -49,7 +52,7 @@ private:
 	}
 
 	UFUNCTION()
-		void SlowDownButtonClicked()
+	void SlowDownButtonClicked()
 	{
 		if (ParentPicker)
 		{
@@ -58,7 +61,7 @@ private:
 	}
 
 	UFUNCTION()
-		void StartButtonClicked()
+	void StartButtonClicked()
 	{
 		if (ParentPicker)
 		{
@@ -71,7 +74,7 @@ private:
 	}
 
 	UFUNCTION()
-		void ResetButtonClicked()
+	void ResetButtonClicked()
 	{
 		if (ParentPicker)
 		{
@@ -84,6 +87,19 @@ private:
 		}
 	}
 
+	UFUNCTION()
+	void RandomButtonClicked()
+	{
+		if (ParentPicker)
+		{
+			ParentPicker->RandomGrid();
+			UE_LOG(LogTemp, Warning, TEXT("RandomButtonClicked ParentPicker"));
+
+		}
+		UE_LOG(LogTemp, Warning, TEXT("RandomButtonClicked"));
+
+	}
+
 	UPROPERTY()
-		AGridActor* ParentPicker;
+	AGridActor* ParentPicker;
 };
