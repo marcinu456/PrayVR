@@ -12,7 +12,7 @@ APendulum::APendulum()
 	PrimaryActorTick.bCanEverTick = true;
 
 	PendulumSpline = CreateDefaultSubobject<USplineComponent>(TEXT("PendulumSpline"));
-	SetRootComponent(PendulumSpline);
+	PendulumSpline->SetupAttachment(GetRootComponent());
 	PendulumSpline->CastShadow = false;
 
 }
@@ -41,7 +41,6 @@ void APendulum::SetParameters(double _theta0, double _length0, double _mass0, do
 	mass1 = start_mass1;
 
 	computePosition();
-	UpdateSplineMeshes();
 }
 
 void APendulum::ResetParameters()
@@ -67,25 +66,21 @@ void APendulum::ResetParameters()
 
 
 	computePosition();
-	UpdateSplineMeshes();
-
 }
 
 // Called when the game starts or when spawned
 void APendulum::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
 void APendulum::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	computeAnglesEuler(DeltaTime*5);
+	computeAnglesEuler(DeltaTime * 5);
 	computePosition();
-	UpdateSplineMeshes();
-
 }
 
 void APendulum::computeAnglesEuler(float dt)
@@ -157,6 +152,32 @@ void APendulum::computePosition()
 
 	PendulumSpline->UpdateSpline();
 
+	for (int32 i = 0; i < Path.Num() - 1; ++i)
+	{
+		if (PendulumSplinePathMeshPool.Num() <= i)
+		{
+			USplineMeshComponent* SplineMesh = NewObject<USplineMeshComponent>(this);
+			SplineMesh->SetMobility(EComponentMobility::Movable);
+			SplineMesh->AttachToComponent(PendulumSpline, FAttachmentTransformRules::KeepRelativeTransform);
+			SplineMesh->SetStaticMesh(FirstColumnArchMesh);
+			SplineMesh->SetMaterial(0, FirstColumnArchMaterial);
+			SplineMesh->RegisterComponent();
+
+			PendulumSplinePathMeshPool.Add(SplineMesh);
+
+			UE_LOG(LogTemp, Warning, TEXT("Some warning PendulumSplinePathMeshPool"));
+		}
+
+		USplineMeshComponent* SplineMesh = PendulumSplinePathMeshPool[i];
+		SplineMesh->SetVisibility(true);
+
+		FVector StarPos, StartTangent, EndPos, EndTangent;
+		FVector Tangent = { 100,100,100 };
+		PendulumSpline->GetLocalLocationAndTangentAtSplinePoint(i, StarPos, StartTangent);
+		PendulumSpline->GetLocalLocationAndTangentAtSplinePoint(i + 1, EndPos, EndTangent);
+		SplineMesh->SetStartAndEnd(StarPos, Tangent, EndPos, Tangent);
+
+	}
 }
 
 
@@ -164,36 +185,6 @@ void APendulum::air()
 {
 	theta0prim *= 0.993;
 	theta1prim *= 0.993;
-}
-
-void APendulum::CreateColumnMeshes()
-{
-	for (int i = 0; i < PendulumSpline->GetNumberOfSplinePoints(); i++)
-	{
-		USplineMeshComponent* SplineMesh = NewObject<USplineMeshComponent>(this);
-		SplineMesh->SetMobility(EComponentMobility::Movable);
-		SplineMesh->AttachToComponent(PendulumSpline, FAttachmentTransformRules::KeepRelativeTransform);
-		SplineMesh->SetStaticMesh(FirstColumnArchMesh);
-		SplineMesh->SetMaterial(0, FirstColumnArchMaterial);
-		SplineMesh->RegisterComponent();
-
-
-		FVector StarPos, StartTangent, EndPos, EndTangent;
-
-		PendulumSpline->GetLocalLocationAndTangentAtSplinePoint(i, StarPos, StartTangent);
-		PendulumSpline->GetLocalLocationAndTangentAtSplinePoint(i + 1, EndPos, EndTangent);
-		SplineMesh->SetStartAndEnd(StarPos, StartTangent, EndPos, EndTangent);
-		SplineMesh->UpdateMesh();
-
-		UE_LOG(LogTemp, Warning, TEXT("Added SplineMesh"));
-		PendulumSplinePathMeshPool.Add(SplineMesh);
-	}
-
-}
-
-void APendulum::UpdateSplineMeshes_Implementation()
-{
-	UE_LOG(LogTemp, Warning, TEXT("UpdateSplineMeshes not impl in BP"));
 }
 
 

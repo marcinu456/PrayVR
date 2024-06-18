@@ -91,10 +91,10 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 		class UMaterialInterface* FirstColumnArchMaterial;
 
-	void CreateColumnMeshes();
+	//void CreateColumnMeshes();
 
 public:
-	UFUNCTION(BlueprintNativeEvent, meta = (AllowPrivateAccess = "true"))
-	void UpdateSplineMeshes();
+	//UFUNCTION(BlueprintNativeEvent, meta = (AllowPrivateAccess = "true"))
+	//void UpdateSplineMeshes();
 
 };
