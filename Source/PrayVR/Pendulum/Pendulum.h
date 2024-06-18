@@ -79,16 +79,22 @@ private:
 
 	float g = -9.81;
 
-	UPROPERTY()
-		TArray<class USplineMeshComponent*> ColumnsPathMeshPool;
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		TArray<class USplineMeshComponent*> PendulumSplinePathMeshPool;
 
-	UPROPERTY(VisibleAnywhere)
-		class USplineComponent* FirstColumn;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class USplineComponent* PendulumSpline;
 
 	UPROPERTY(EditDefaultsOnly)
 		class UStaticMesh* FirstColumnArchMesh;
 
 	UPROPERTY(EditDefaultsOnly)
 		class UMaterialInterface* FirstColumnArchMaterial;
+
+	void CreateColumnMeshes();
+
+public:
+	UFUNCTION(BlueprintNativeEvent, meta = (AllowPrivateAccess = "true"))
+	void UpdateSplineMeshes();
 
 };

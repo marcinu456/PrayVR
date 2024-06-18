@@ -11,9 +11,9 @@ APendulum::APendulum()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	FirstColumn = CreateDefaultSubobject<USplineComponent>(TEXT("FirstColumn"));
-	FirstColumn->SetupAttachment(GetRootComponent());
-	FirstColumn->CastShadow = false;
+	PendulumSpline = CreateDefaultSubobject<USplineComponent>(TEXT("PendulumSpline"));
+	SetRootComponent(PendulumSpline);
+	PendulumSpline->CastShadow = false;
 
 }
 
@@ -41,6 +41,7 @@ void APendulum::SetParameters(double _theta0, double _length0, double _mass0, do
 	mass1 = start_mass1;
 
 	computePosition();
+	UpdateSplineMeshes();
 }
 
 void APendulum::ResetParameters()
@@ -66,6 +67,8 @@ void APendulum::ResetParameters()
 
 
 	computePosition();
+	UpdateSplineMeshes();
+
 }
 
 // Called when the game starts or when spawned
@@ -81,6 +84,8 @@ void APendulum::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	computeAnglesEuler(DeltaTime*5);
 	computePosition();
+	UpdateSplineMeshes();
+
 }
 
 void APendulum::computeAnglesEuler(float dt)
@@ -141,44 +146,17 @@ void APendulum::computePosition()
 	Path.Add(EndPos1);
 	Path.Add(EndPos2);
 
-	FirstColumn->ClearSplinePoints(false);
+	PendulumSpline->ClearSplinePoints(false);
 	int32 index = 0;
 	for (auto& Point : Path)
 	{
-		FVector LocalPosition = FirstColumn->GetComponentTransform().InverseTransformPosition(Point);
-		FirstColumn->AddPoint(FSplinePoint(index, LocalPosition, ESplinePointType::Constant), false);
+		FVector LocalPosition = PendulumSpline->GetComponentTransform().InverseTransformPosition(Point);
+		PendulumSpline->AddPoint(FSplinePoint(index, LocalPosition, ESplinePointType::Constant), false);
 		index++;
 	}
 
-	FirstColumn->UpdateSpline();
+	PendulumSpline->UpdateSpline();
 
-	for (int32 i = 0; i < Path.Num() - 1; ++i)
-	{
-		if (ColumnsPathMeshPool.Num() <= i)
-		{
-			USplineMeshComponent* SplineMesh = NewObject<USplineMeshComponent>(this);
-			SplineMesh->SetMobility(EComponentMobility::Movable);
-			SplineMesh->AttachToComponent(FirstColumn, FAttachmentTransformRules::KeepRelativeTransform);
-			SplineMesh->SetStaticMesh(FirstColumnArchMesh);
-			SplineMesh->SetMaterial(0, FirstColumnArchMaterial);
-			SplineMesh->RegisterComponent();
-
-			ColumnsPathMeshPool.Add(SplineMesh);
-
-			UE_LOG(LogTemp, Warning, TEXT("Some warning ColumnsPathMeshPool"));
-		}
-
-		USplineMeshComponent* SplineMesh = ColumnsPathMeshPool[i];
-		SplineMesh->SetVisibility(true);
-
-		FVector StarPos, StartTangent, EndPos, EndTangent;
-		FVector Tangent = { 0,0,0 };
-		FirstColumn->GetLocalLocationAndTangentAtSplinePoint(i, StarPos, StartTangent);
-		FirstColumn->GetLocalLocationAndTangentAtSplinePoint(i + 1, EndPos, EndTangent);
-		SplineMesh->SetStartAndEnd(StarPos, Tangent, EndPos, Tangent);
-
-	}
-	//TODO fix the bug with non visible spline mesh
 }
 
 
@@ -186,6 +164,36 @@ void APendulum::air()
 {
 	theta0prim *= 0.993;
 	theta1prim *= 0.993;
+}
+
+void APendulum::CreateColumnMeshes()
+{
+	for (int i = 0; i < PendulumSpline->GetNumberOfSplinePoints(); i++)
+	{
+		USplineMeshComponent* SplineMesh = NewObject<USplineMeshComponent>(this);
+		SplineMesh->SetMobility(EComponentMobility::Movable);
+		SplineMesh->AttachToComponent(PendulumSpline, FAttachmentTransformRules::KeepRelativeTransform);
+		SplineMesh->SetStaticMesh(FirstColumnArchMesh);
+		SplineMesh->SetMaterial(0, FirstColumnArchMaterial);
+		SplineMesh->RegisterComponent();
+
+
+		FVector StarPos, StartTangent, EndPos, EndTangent;
+
+		PendulumSpline->GetLocalLocationAndTangentAtSplinePoint(i, StarPos, StartTangent);
+		PendulumSpline->GetLocalLocationAndTangentAtSplinePoint(i + 1, EndPos, EndTangent);
+		SplineMesh->SetStartAndEnd(StarPos, StartTangent, EndPos, EndTangent);
+		SplineMesh->UpdateMesh();
+
+		UE_LOG(LogTemp, Warning, TEXT("Added SplineMesh"));
+		PendulumSplinePathMeshPool.Add(SplineMesh);
+	}
+
+}
+
+void APendulum::UpdateSplineMeshes_Implementation()
+{
+	UE_LOG(LogTemp, Warning, TEXT("UpdateSplineMeshes not impl in BP"));
 }
 
 
