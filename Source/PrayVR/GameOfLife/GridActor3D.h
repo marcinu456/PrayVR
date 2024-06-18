@@ -55,10 +55,13 @@ public:
 
 	virtual void RandomGrid() override;
 
-protected:
-	virtual void BeginPlay() override;
+	UFUNCTION(BlueprintCallable)
+	void ResetGrid(int NewHeight = 10, int NewWidth = 10, int NewDeep = 1);
 
+	UFUNCTION(BlueprintCallable)
+	int GetHeight() const { return Height; }
 
+private:
 
 	/**
 	* Counts the number of alive neighbors for the cell at index j + i * width.
@@ -68,7 +71,17 @@ protected:
 	/**
 	* Updates the cells' AliveNext field based on the rules of the game.
 	*/
-	void UpdateAliveNext(const int32 i, const int32 j, const int32 k, const int32 NumAliveNeighbors);
+	void UpdateAliveNext2D(const int32 i, const int32 j, const int32 k, const int32 NumAliveNeighbors);
+
+	void UpdateAliveNext3D(const int32 i, const int32 j, const int32 k, const int32 NumAliveNeighbors);
+
+
+
+protected:
+
+	virtual void BeginPlay() override;
+
+	virtual void CreateGrid() override;
 
 	/**
 	* Populates the AliveNext field of all the cells in the grid to be able to advance to the next generation.
@@ -87,4 +100,7 @@ protected:
 	UPROPERTY(EditAnywhere, meta = (ClampMin = "1", AllowPrivateAccess = "true", Category = "Grid Setup"))
 	int Deep = 10;
 
+
+	UFUNCTION(BlueprintCallable)
+	ACellActor* GetCellActor(int i, int j, int k) const { return CellActors3D[i][j][k]; }
 };

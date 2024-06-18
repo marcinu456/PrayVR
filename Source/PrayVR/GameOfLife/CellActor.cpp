@@ -55,6 +55,7 @@ void ACellActor::BeginCursorOver()
 	//if (MyGameState->GetEditMode()) {
 		StaticMeshComponent->SetMaterial(0, BeginCursorOverMaterial);
 	//}
+		UE_LOG(LogTemp, Warning, TEXT("Cell BeginCursorOver"));
 }
 
 void ACellActor::EndCursorOver()
@@ -68,6 +69,8 @@ void ACellActor::EndCursorOver()
 			StaticMeshComponent->SetMaterial(0, ClickedMaterial);
 		}
 	//}
+		UE_LOG(LogTemp, Warning, TEXT("Cell EndCursorOver"));
+
 }
 
 void ACellActor::Update()
@@ -92,12 +95,13 @@ void ACellActor::Reset()
 
 void ACellActor::Random()
 {
-	if (Alive) {
-		StaticMeshComponent->SetMaterial(0, BeginCursorOverMaterial);
-	}
-	else {
-		StaticMeshComponent->SetMaterial(0, ClickedMaterial);
-	}
+	EndCursorOver();
+	//if (Alive) {
+	//	StaticMeshComponent->SetMaterial(0, BeginCursorOverMaterial);
+	//}
+	//else {
+	//	StaticMeshComponent->SetMaterial(0, ClickedMaterial);
+	//}
 }
 
 

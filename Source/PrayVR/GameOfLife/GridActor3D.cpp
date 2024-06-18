@@ -6,13 +6,14 @@
 #include "CellActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "PrayVR/Test/TestGameState.h"
+#include "GameOfLifeControll.h"
 
 AGridActor3D::AGridActor3D()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	AdvanceTime = 1.5f;
-	maxTimer = 5.f;
+	AdvanceTime = 0.7f;
+	maxTimer = 1.5f;
 	minTimer = 0.1f;
 }
 
@@ -20,7 +21,10 @@ AGridActor3D::AGridActor3D()
 void AGridActor3D::BeginPlay()
 {
 	Super::BeginPlay();
+}
 
+void AGridActor3D::CreateGrid()
+{
 	TArray<UStaticMeshComponent*> Components;
 	CellActor.GetDefaultObject()->GetComponents<UStaticMeshComponent>(Components);
 	const FVector BoxExtent = Components[0]->GetStaticMesh()->GetBounds().BoxExtent;
@@ -60,7 +64,23 @@ void AGridActor3D::BeginPlay()
 		}
 		CellActors3D.push_back(v2d);
 	}
+}
 
+void AGridActor3D::ResetGrid(int NewHeight, int NewWidth, int NewDeep)
+{
+	Reset();
+	for (int i = 0; i < Height; i++) {
+		for (int j = 0; j < Width; j++) {
+			for (int k = 0; k < Deep; k++) {
+				CellActors3D[i][j][k]->Destroy();
+			}
+		}
+	}
+	CellActors3D.clear();
+	Height = NewHeight;
+	Width = NewWidth;
+	Deep = NewDeep;
+	CreateGrid();
 }
 
 int32 AGridActor3D::CountAliveNeighbors(const int32 i, const int32 j, const int32 k) 
@@ -85,10 +105,8 @@ int32 AGridActor3D::CountAliveNeighbors(const int32 i, const int32 j, const int3
 	return NumAliveNeighbors;
 }
 
-//TODO wszystko to do vr i dodaj tam player controler do test�w
-//TODO change rules http://cs.brown.edu/courses/cs195v/projects/life/edwallac/index.html
-//TODO change visibility
-void AGridActor3D::UpdateAliveNext(const int32 i, const int32 j, const int32 k, const int32 NumAliveNeighbors) 
+
+void AGridActor3D::UpdateAliveNext2D(const int32 i, const int32 j, const int32 k, const int32 NumAliveNeighbors)
 {
 	const bool IsAlive = CellActors3D[i][j][k]->GetAlive();
 	if (IsAlive && (NumAliveNeighbors < 2))
@@ -112,13 +130,36 @@ void AGridActor3D::UpdateAliveNext(const int32 i, const int32 j, const int32 k, 
 	}
 }
 
+//TODO change rules http://cs.brown.edu/courses/cs195v/projects/life/edwallac/index.html
+//TODO change visibility
+void AGridActor3D::UpdateAliveNext3D(const int32 i, const int32 j, const int32 k, const int32 NumAliveNeighbors)
+{
+	const bool IsAlive = CellActors3D[i][j][k]->GetAlive();
+	if (!IsAlive && (NumAliveNeighbors >= 5 && NumAliveNeighbors <= 8))
+	{
+		CellActors3D[i][j][k]->SetAliveNext(true);
+	}
+	else if (IsAlive && (NumAliveNeighbors == 6))
+	{
+		CellActors3D[i][j][k]->SetAliveNext(true);
+	}
+	else
+	{
+		CellActors3D[i][j][k]->SetAliveNext(false);
+	}
+}
+
+
 void AGridActor3D::GenerateNext() 
 {
 	for (int i = 0; i < Height; i++) {
 		for (int j = 0; j < Width; j++) {
 			for (int k = 0; k < Deep; k++) {
 				const int NumAliveNeighbors = CountAliveNeighbors(i, j, k);
-				UpdateAliveNext(i, j, k, NumAliveNeighbors);
+				if(Deep <= 1)
+					UpdateAliveNext2D(i, j, k, NumAliveNeighbors);
+				else
+					UpdateAliveNext3D(i, j, k, NumAliveNeighbors);
 			}
 		}
 	}
@@ -149,19 +190,19 @@ void AGridActor3D::ToEditMode()
 
 void AGridActor3D::ToPlayMode() 
 {
-	for (int i = 0; i < Height; i++) {
-		for (int j = 0; j < Width; j++) {
-			for (int k = 0; k < Deep; k++) {
-				//const bool IsAlive = CellActors3D[i][j][k]->GetAlive();
-				//if (IsAlive) {
-				//	CellActors3D[i][j][k]->SetActorHiddenInGame(false);
-				//}
-				//else {
-				//	CellActors3D[i][j][k]->SetActorHiddenInGame(true);
-				//}
-			}
-		}
-	}
+	//for (int i = 0; i < Height; i++) {
+	//	for (int j = 0; j < Width; j++) {
+	//		for (int k = 0; k < Deep; k++) {
+	//			//const bool IsAlive = CellActors3D[i][j][k]->GetAlive();
+	//			//if (IsAlive) {
+	//			//	CellActors3D[i][j][k]->SetActorHiddenInGame(false);
+	//			//}
+	//			//else {
+	//			//	CellActors3D[i][j][k]->SetActorHiddenInGame(true);
+	//			//}
+	//		}
+	//	}
+	//}
 	StartTimer();
 }
 
@@ -169,13 +210,13 @@ void AGridActor3D::ToPlayMode()
 void AGridActor3D::Reset() 
 {
 	ClearTimer();
-	for (int i = 0; i < Height; i++) {
-		for (int j = 0; j < Width; j++) {
-			for (int k = 0; k < Deep; k++) {
-				CellActors3D[i][j][k]->Reset();
-			}
-		}
-	}
+	//for (int i = 0; i < Height; i++) {
+	//	for (int j = 0; j < Width; j++) {
+	//		for (int k = 0; k < Deep; k++) {
+	//			CellActors3D[i][j][k]->Reset();
+	//		}
+	//	}
+	//}
 }
 
 void AGridActor3D::RandomGrid()
@@ -185,15 +226,28 @@ void AGridActor3D::RandomGrid()
 	for (int i = 0; i < Height; i++) {
 		for (int j = 0; j < Width; j++) {
 			for (int k = 0; k < Deep; k++) {
+				CellActors3D[i][j][k]->Reset();
+			}
+		}
+	}
+
+	for (int i = 0; i < Height; i++) {
+		for (int j = 0; j < Width; j++) {
+			for (int k = 0; k < Deep; k++) {
 				if (FMath::RandRange(0.0f, 1.0f) < 0.2f)
 				{
-					CellActors3D[i][j][k]->SetAlive(true);
-					CellActors3D[i][j][k]->Random();
+					CellActors3D[i][j][k]->Clicked();
+					//CellActors3D[i][j][k]->EndCursorOver();
 				}
 			}
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("RandomGrid"));
+	UE_LOG(LogTemp, Warning, TEXT("RandomGridDups"));
 }
+
+
+
+
+
 
 

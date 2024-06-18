@@ -6,6 +6,7 @@
 #include "GridActor.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include <Components\CheckBox.h>
 #include "Components/EditableTextBox.h"
 #include "GameOfLifeControll.generated.h"
 
@@ -36,7 +37,10 @@ protected:
 	UButton* ResetButton;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (BindWidget))
-	UButton* RandomButton;
+	UButton* RandomButton;	
+	
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (BindWidget))
+	UCheckBox* CheckBox_3D;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, meta = (BindWidget))
 	UEditableTextBox* NumberOfPendulum;
@@ -67,9 +71,11 @@ private:
 		{
 			ParentPicker->ToPlayMode();
 			StartButton->SetIsEnabled(false);
-			//SpeedUpButton->SetIsEnabled(true);
-			//SlowDownButton->SetIsEnabled(true);
+			SpeedUpButton->SetIsEnabled(false);
+			SlowDownButton->SetIsEnabled(false);
 			ResetButton->SetIsEnabled(true);
+			RandomButton->SetIsEnabled(false);
+			CheckBox_3D->SetIsEnabled(false);
 		}
 	}
 
@@ -81,9 +87,11 @@ private:
 			ParentPicker->ToEditMode();
 			ParentPicker->Reset();
 			StartButton->SetIsEnabled(true);
-			//SpeedUpButton->SetIsEnabled(false);
-			//SlowDownButton->SetIsEnabled(false);
+			SpeedUpButton->SetIsEnabled(true);
+			SlowDownButton->SetIsEnabled(true);
 			ResetButton->SetIsEnabled(false);
+			RandomButton->SetIsEnabled(true);
+			CheckBox_3D->SetIsEnabled(true);
 		}
 	}
 
@@ -100,6 +108,6 @@ private:
 
 	}
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	AGridActor* ParentPicker;
 };

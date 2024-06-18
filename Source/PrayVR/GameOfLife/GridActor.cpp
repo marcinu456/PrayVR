@@ -33,6 +33,11 @@ void AGridActor::BeginPlay()
 		PaintingActionBar->SetParentPicker(this);
 	}
 
+	CreateGrid();
+}
+
+void AGridActor::CreateGrid()
+{
 	TArray<UStaticMeshComponent*> Components;
 	CellActor.GetDefaultObject()->GetComponents<UStaticMeshComponent>(Components);
 	const FVector BoxExtent = Components[0]->GetStaticMesh()->GetBounds().BoxExtent;
