@@ -242,7 +242,7 @@ void AGridActor3D::RandomGrid()
 			}
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("RandomGrid"));
+	UE_LOG(LogTemp, Warning, TEXT("RandomGridDups"));
 }
 
 

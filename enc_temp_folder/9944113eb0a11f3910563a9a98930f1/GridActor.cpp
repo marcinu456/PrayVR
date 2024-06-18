@@ -205,10 +205,6 @@ float AGridActor::AddTime()
 	if (AdvanceTime >= minTimer && AdvanceTime < maxTimer) {
 		AdvanceTime += 0.1f;
 	}
-	else
-	{
-		AdvanceTime = maxTimer;
-	}
 	return AdvanceTime;
 }
 
@@ -216,10 +212,6 @@ float AGridActor::DeleteTime()
 {
 	if (AdvanceTime > minTimer && AdvanceTime <= maxTimer) {
 		AdvanceTime -= 0.1f;
-	}
-	else
-	{
-		AdvanceTime = minTimer;
 	}
 	return AdvanceTime;
 
